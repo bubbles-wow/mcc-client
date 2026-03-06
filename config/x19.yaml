@@ -1,0 +1,156 @@
+session:
+  path: session/
+  expired: 1500
+  timezone: 0
+  file_name: "{server_code}_{server_env}.session"
+
+client:
+  android:
+    engine_version: 3.7.15.288131
+    engine_hash: 0fb7b528b222a7a44a10b08e994c786e
+    patch_version: 3.7.34.288908
+    patch_hash: 3bf716d96f97fdcde8ccf7ae662092f9
+    pay_channel: dashen_cloudgame
+  pc_cocos:
+    # 7ca013bb30a74d822579860c042b104289c8-ef08-46de-8937-ad6a7505be6e
+    engine_version: 3.7.35.289176
+    engine_hash: 198410ede9f995d31c3721a9f8e27076
+    patch_version: 3.7.35.289176
+    patch_hash: fa6e3c61fdea03909817b3252b9166de
+    pay_channel: netease
+  pc:
+    version: 1.15.18.46492
+
+sa_data:
+  app_channel: 
+  core_num: 
+  cpu_digit: 
+  cpu_hz: 
+  cpu_name: 
+  device_model: 
+  first_udid: 
+  network: 
+  os_name: 
+  os_ver: 
+  ram: 
+  rom: 
+  root: 
+  udid: 
+
+sauth:
+  access_token: 
+  deviceid: 
+  get_access_token: 
+  ip: 
+  login_channel: 
+  sdkuid: 
+  sessionid: 
+  udid: 
+
+server:
+  x19:
+    adr: 
+      serverlist_url: https://x19.update.netease.com/serverlist/adr.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    expr: 
+      serverlist_url: https://x19.update.netease.com/serverlist/experience.0.4.json
+      auth_enc_type: 1
+      api_host_flag: 1
+    gaiya: 
+      serverlist_url: https://x19.update.netease.com/serverlist/gaiya.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    moyinglong: 
+      serverlist_url: https://x19.update.netease.com/serverlist/moyinglong.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    obt: 
+      serverlist_url: https://x19.update.netease.com/serverlist/release.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    qa: 
+      serverlist_url: https://x19.update.netease.com/serverlist/qa.0.4.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    qa3: 
+      serverlist_url: https://x19.update.netease.com/serverlist/qa3_jxsl.0.4.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    qa4: 
+      serverlist_url: https://x19.update.netease.com/serverlist/qa4_season.0.4.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    sim: 
+      serverlist_url: https://x19.update.netease.com/serverlist/sim_gray.json
+      auth_enc_type: 1
+      api_host_flag: 2
+    stress: 
+      serverlist_url: https://x19.update.netease.com/serverlist/stress.json
+      auth_enc_type: 1
+      api_host_flag: 0
+    taitan: 
+      serverlist_url: https://x19.update.netease.com/serverlist/taitan.json
+      auth_enc_type: 1
+      api_host_flag: 0
+  g79:
+    adr: 
+      serverlist_url: https://g79.update.netease.com/serverlist/adr_review_forever2.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    expr: 
+      serverlist_url: https://g79.update.netease.com/serverlist/expr_release.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    expr1: 
+      serverlist_url: https://g79.update.netease.com/serverlist/expr1_release.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    gaiya: 
+      serverlist_url: https://g79.update.netease.com/serverlist/gaiya.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    ios: 
+      serverlist_url: https://g79.update.netease.com/serverlist/ios_review_forever.json
+      auth_enc_type: 0
+      api_host_flag: 0
+    moyinglong: 
+      serverlist_url: https://g79.update.netease.com/serverlist/moyinglong.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    obt: 
+      serverlist_url: https://g79.update.netease.com/serverlist/release.gray.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    qa: 
+      serverlist_url: https://g79.update.netease.com/serverlist/qa.0.1.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    qa3: 
+      serverlist_url: https://g79.update.netease.com/serverlist/qa3_jxsl.0.1.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    qa4: 
+      serverlist_url: https://g79.update.netease.com/serverlist/qa4_season.0.1.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    sim: 
+      serverlist_url: https://g79.update.netease.com/serverlist/sim.0.2.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    stress: 
+      serverlist_url: https://g79.update.netease.com/serverlist/stress.0.1.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    taitan: 
+      serverlist_url: https://g79.update.netease.com/serverlist/taitan.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    tech: 
+      serverlist_url: https://g79.update.netease.com/serverlist/tech.0.2.json
+      auth_enc_type: 4
+      api_host_flag: 0
+    tesm: 
+      serverlist_url: https://g79.update.netease.com/serverlist/tesm.0.2.json
+      auth_enc_type: 4
+      api_host_flag: 0
