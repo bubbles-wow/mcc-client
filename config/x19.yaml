@@ -8,16 +8,17 @@ client:
   android:
     engine_version: 3.7.15.288131
     engine_hash: 0fb7b528b222a7a44a10b08e994c786e
-    patch_version: 3.7.34.288908
-    patch_hash: 3bf716d96f97fdcde8ccf7ae662092f9
+    patch_version: 3.7.36.289472
+    patch_hash: bf7162f93d919eef966ccedc1316d696
     pay_channel: dashen_cloudgame
+    # sign_hash: 2b3e7ca013bb30a74d822579860c042b
   pc_cocos:
-    # 7ca013bb30a74d822579860c042b104289c8-ef08-46de-8937-ad6a7505be6e
-    engine_version: 3.7.35.289176
-    engine_hash: 198410ede9f995d31c3721a9f8e27076
-    patch_version: 3.7.35.289176
-    patch_hash: fa6e3c61fdea03909817b3252b9166de
+    engine_version: 3.7.36.289473
+    engine_hash: 63ced534eead6be986a3f781bfd74317
+    patch_version: 3.7.37.289628
+    patch_hash: 583f68793af1bafee193414a4aefa517
     pay_channel: netease
+    # sign_hash: 2b3e7ca013bb30a74d822579860c042b
   pc:
     version: 1.15.18.46492
 

@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from . import BaseEntity
 
-
 @dataclass
 class SearchByType(BaseEntity):
     """

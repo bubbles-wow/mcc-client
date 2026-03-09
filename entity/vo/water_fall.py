@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .pe_item import PeItem
+from . import PeItem
 from . import BaseEntity
 
 @dataclass
