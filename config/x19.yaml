@@ -1,6 +1,6 @@
 session:
   path: session/
-  expired: 1500
+  expired: 1800
   timezone: 0
   file_name: "{server_code}_{server_env}.session"
 
@@ -8,8 +8,8 @@ client:
   android:
     engine_version: 3.7.15.288131
     engine_hash: 0fb7b528b222a7a44a10b08e994c786e
-    patch_version: 3.7.36.289472
-    patch_hash: bf7162f93d919eef966ccedc1316d696
+    patch_version: 3.7.36.289626
+    patch_hash: 767f11d6b1d70cac0694477ffcee2c99
     pay_channel: dashen_cloudgame
     # sign_hash: 2b3e7ca013bb30a74d822579860c042b
   pc_cocos:
