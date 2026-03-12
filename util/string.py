@@ -5,8 +5,9 @@ import random
 from typing import Any
 
 def to_snake_case(name: str) -> str:
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    s1 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name)
+    s2 = re.sub('([A-Z]+)([A-Z][a-z])', r'\1_\2', s1)
+    return s2.lower()
 
 def convert_keys_to_snake(data: Any) -> Any:
     if isinstance(data, dict):
@@ -18,3 +19,6 @@ def convert_keys_to_snake(data: Any) -> Any:
 def rand_string_runes(n: int) -> str:
     letters = string.ascii_letters + string.digits
     return ''.join(random.choice(letters) for _ in range(n))
+
+def is_empty(s: str) -> bool:
+    return s is None or s.strip() == ""

@@ -8,7 +8,6 @@ class Server(BaseEntity):
     serverlist_url: str
     server_env: str
     server_code: str
-    auth_enc_type: int
     api_host_flag: int
     etag: str
     last_modified: str

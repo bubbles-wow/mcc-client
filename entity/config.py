@@ -11,18 +11,24 @@ class SessionConfig(BaseEntity):
     expired: int = 1800
     timezone: int = 0
     file_name: str = "{server_type}_{server_env}.session"
+    
+@dataclass
+class ApiDetailConfig(BaseEntity):
+    host: str = ""
+    path: str = ""
+    encrypt_body_type: int = 0
 
 @dataclass
 class ApiConfig(BaseEntity):
-    login_otp: str = "/login-otp"
-    authentication_otp: str = "/authentication-otp"
-    pe_authentication: str = "/pe-authentication"
-    authentication_update: str = "/authentication/update"
+    login_otp: ApiDetailConfig = field(default_factory=ApiDetailConfig)
+    authentication_otp: ApiDetailConfig = field(default_factory=ApiDetailConfig)
+    authentication_update: ApiDetailConfig = field(default_factory=ApiDetailConfig)
+    pe_authentication: ApiDetailConfig = field(default_factory=ApiDetailConfig)
 
 @dataclass
 class ServerDetailConfig(BaseEntity):
     serverlist_url: str
-    auth_enc_type: int = 0
+    api_config: ApiConfig = field(default_factory=ApiConfig)
     api_host_flag: int = 1
     
 @dataclass
@@ -47,7 +53,6 @@ class ClientConfig(BaseEntity):
 @dataclass
 class X19Config(BaseEntity):
     session: SessionConfig = field(default_factory=SessionConfig)
-    api: ApiConfig = field(default_factory=ApiConfig)
     client: ClientConfig = field(default_factory=ClientConfig)
     sa_data: SaData = field(default_factory=SaData)
     sauth: Sauth = field(default_factory=Sauth)

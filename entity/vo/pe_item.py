@@ -34,7 +34,7 @@ class PeItem(BaseEntity):
     
     Arguments:
         item_id: str
-        first_type: item type, enum [0: all, 1: world, 2: mod, 3: visual and texture]
+        first_type: item type, enum [0: all, 1: world, 2: mod, 3: visual and texture, 4: skin, 8: multi mods pack]
         second_type: int
         pic_tag_state: int
         res_name: name of the resource
@@ -99,7 +99,7 @@ class PeItem(BaseEntity):
     playing_uuid: str
     behaviour_uuid: str
     is_sync: int
-    item_pack_iids: list[Any]
+    item_pack_iids: list[str]
     performance_score: int
     playability_score: float
     creativity_score: float

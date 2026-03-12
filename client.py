@@ -12,18 +12,18 @@ from typing import Dict, Optional, Type
 
 from .util import load_config_as_obj, http, CustomLogger, crypto, string
 from .entity import (
-    SaData, Sauth, Server, Authentication, Response as X19Response, 
-    Entity, User, Otp, Serverlist, ApiConfig, SessionConfig, X19Config,
+    SaData, Sauth, Server, Response as X19Response, 
+    Entity, User, Serverlist, ApiConfig, SessionConfig, X19Config,
     ClientConfig
 )
+from .service import auth
 from .util import crypto, string
 
 client_base_path = Path(__file__).parent
 
 class Client:
-    def __init__(self, session: Session, logger: Logger, server: Server, 
-                 sa_data: SaData, sauth: Sauth, session_config: SessionConfig, 
-                 api_config: ApiConfig, client_config: ClientConfig, 
+    def __init__(self, session: Session, logger: Logger, server: Server, sa_data: SaData, sauth: Sauth, 
+                 session_config: SessionConfig, api_config: ApiConfig, client_config: ClientConfig, 
                  force_relogin: bool = False) -> None:
         self.session = session
         self.logger = logger
@@ -66,7 +66,7 @@ class Client:
         if force_relogin or self.user_info is None or self.expires_at is None:
             self._login()
         elif datetime.now(tz) >= self.expires_at:
-            self._authentication_update()
+            self._check_login_result(auth.authentication_update(self))
 
     def _load_session(self):
         if not os.path.exists(self.session_path):
@@ -165,6 +165,13 @@ class Client:
         self._save_session()
         self.logger.info(150, f"Login successful. (user_id={self.user_info.entity_id}, expires_at={self.expires_at.isoformat()})")
         
+    def _check_login_result(self, response: X19Response[User]) -> bool:
+        if response is None or response.entity is None:
+            self.logger.error(151, "Login failed: No user info in response.")
+            return False
+        self._update_user_info(response.entity)
+        return True
+        
     def is_logined(self) -> bool:
         return self.user_info is not None and self.expires_at is not None and datetime.now(timezone(timedelta(hours=self.session_config.timezone))) < self.expires_at
         
@@ -172,9 +179,13 @@ class Client:
                            target_entity_type: Type[Entity] = None, **kwargs) -> X19Response | None:
         """encrypt_body_type: 0-no encryption, 1-x19encrypted, 2-x19encrypted hexadecimal, 
                             3-g79encrypted, 4-g79encrypted hexadecimal"""
+        if string.is_empty(base_url):
+            self.logger.error(101, f"Base URL is empty for API request! (method={method}, path={path})")
+            return None
+                            
         final_body = self._encrypt_body(body, encrypt_body_type=encrypt_body_type)
         self.logger.info(100, (f"Preparing request. (method={method}, url={base_url + path}, headers={header}, body={body.decode('utf-8', errors='replace')}, "
-                               f"final_body={base64.b64encode(final_body).decode()}, encrypt_body_type={encrypt_body_type})"))
+                               f"final_body_base64={base64.b64encode(final_body).decode()}, encrypt_body_type={encrypt_body_type})"))
             
         response = http.request(
             logger=self.logger,
@@ -207,94 +218,15 @@ class Client:
     def get_user_id(self) -> Optional[str]:
         return str(self.user_info.entity_id) if self.user_info else None
 
-    def _login_otp(self) -> X19Response[Otp] | None:
-        body = {
-            "sauth_json": self.sauth.to_json()
-        }
-        return self.request(
-            method="POST",
-            base_url=self.server.serverlist.core_server_url,
-            path=self.api_config.login_otp,
-            body=json.dumps(body, separators=(',', ':')).encode('utf-8'),
-            target_entity_type=Otp
-        )
-    
-    def _authentication_otp(self, otp: Otp) -> None:
-        if not otp:
-            return
-        self.sa_data.app_ver = self.pc_client.version
-        authentication_body = Authentication(
-            sa_data=self.sa_data.to_json(),
-            sauth_json=self.sauth.to_json(),
-            otp_token=otp.otp_token,
-            aid=otp.aid,
-            version=self.pc_client.to_dict()
-        )
-        result = self.request(
-            method="POST",
-            base_url=self.server.serverlist.core_server_url,
-            path=self.api_config.authentication_otp,
-            body=json.dumps(authentication_body.to_dict(), separators=(',', ':')).encode('utf-8'),
-            encrypt_body_type=self.server.auth_enc_type,
-            target_entity_type=User
-        )
-        if result is None or result.entity is None:
-            return
-        self._update_user_info(result.entity)
-    
-    def _pe_authentication(self) -> None:
-        # TODO: fetch latest version from server
-        seed = str(uuid.uuid4())
-        message = self.pe_client.engine_version + self.pe_client.engine_hash + \
-            self.pe_client.patch_version + self.pe_client.patch_hash + \
-                self.pe_client.sign_hash + seed
-        self.sa_data.app_ver = self.pe_client.patch_version
-        authentication_body = Authentication(
-            engine_version=self.pe_client.engine_version,
-            message=message,
-            patch_version=self.pe_client.patch_version,
-            pay_channel=self.pe_client.pay_channel,
-            sa_data=self.sa_data.to_json(),
-            sauth_json=self.sauth,
-            seed=seed,
-            sign=crypto.pe_auth_sign(message)
-        )
-        result = self.request(
-            method="POST",
-            base_url=self.server.serverlist.core_server_url,
-            path=self.api_config.pe_authentication,
-            body=json.dumps(authentication_body.to_dict(), separators=(',', ':')).encode('utf-8'),
-            encrypt_body_type=self.server.auth_enc_type,
-            target_entity_type=User
-        )
-        if result is None or result.entity is None:
-            return
-        self._update_user_info(result.entity)
-        
-    def _authentication_update(self) -> None:
-        if self.user_info is None:
-            return
-        result = self.request(
-            method="POST",
-            base_url=self.server.serverlist.core_server_url,
-            path=self.api_config.authentication_update,
-            body=self.user_info.to_json().encode('utf-8'),
-            encrypt_body_type=self.server.auth_enc_type,
-            target_entity_type=User
-        )
-        if result is None or result.entity is None:
-            return
-        self._update_user_info(result.entity)
-
     def _login(self):
         self.user_info = None
         self.expires_at = None
         if self.server.server_code == "x19":
-            otp_response = self._login_otp()
+            otp_response = auth.login_otp(self)
             if otp_response is not None and otp_response.entity is not None:
-                self._authentication_otp(otp_response.entity)
+                self._check_login_result(auth.authentication_otp(self, otp_response.entity))
         elif self.server.server_code == "g79":
-            self._pe_authentication()
+            self._check_login_result(auth.pe_authentication(self))
         else:
             self.logger.error(110, f"Unsupported server type for login: {self.server.server_code}")
 
@@ -380,7 +312,6 @@ class ClientManager:
             serverlist_url=server_detail.serverlist_url,
             server_env=server_env,
             server_code=server_code,
-            auth_enc_type=server_detail.auth_enc_type,
             api_host_flag=server_detail.api_host_flag,
             etag="",
             last_modified="",
@@ -399,7 +330,7 @@ class ClientManager:
             sa_data=cls._config.sa_data,
             sauth=cls._config.sauth,
             session_config=cls._config.session,
-            api_config=cls._config.api,
+            api_config=server_detail.api_config,
             client_config=cls._config.client,
             force_relogin=force_relogin
         )

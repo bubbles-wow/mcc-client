@@ -142,7 +142,7 @@ class PeItemDetail(BaseEntity):
     benefit_item_end_time: int
     union_developer_list: list[Any]
     is_shopping_cart: int
-    item_pack_iids: list[Any]
+    item_pack_iids: list[str]
     resource_pack_iids: list[Any]
     recent_stars_data: StarsData
     pay_stars_data: StarsData
