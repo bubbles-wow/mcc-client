@@ -1,6 +1,7 @@
 from common.entity import BaseEntity
 
 from .buy_item_result import BuyItemResult
+from .developer import Developer
 from .download_info import DownloadInfo
 from .encrypt_key import EncryptKey
 from .item import Item

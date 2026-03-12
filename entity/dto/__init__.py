@@ -16,4 +16,5 @@ from .search_by_id_list import SearchByIdList
 from .search_by_ids import SearchByIds
 from .search_by_keyword import SearchByKeyword
 from .search_by_type import SearchByType
+from .search_developer_by_keyword import SearchDeveloperByKeyword
 from .search_season_mods import SearchSeasonMods

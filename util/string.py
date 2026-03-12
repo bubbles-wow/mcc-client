@@ -1,7 +1,7 @@
 import re
-import string
 import random
 
+from string import *
 from typing import Any
 
 def to_snake_case(name: str) -> str:
@@ -17,7 +17,7 @@ def convert_keys_to_snake(data: Any) -> Any:
     return data
 
 def rand_string_runes(n: int) -> str:
-    letters = string.ascii_letters + string.digits
+    letters = ascii_letters + digits
     return ''.join(random.choice(letters) for _ in range(n))
 
 def is_empty(s: str) -> bool:

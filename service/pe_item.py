@@ -1,18 +1,15 @@
 from typing import TYPE_CHECKING, List
 
-from mcc.entity.dto.pe_purchase_item import PePurchaseItem
-from mcc.entity.dto.search_season_mods import SearchSeasonMods
-from mcc.entity.vo.buy_item_result import BuyItemResult
-from mcc.entity.vo.pe_purchase_item_order import PePurchaseItemOrder
-from mcc.entity.vo.purchase_result import PurchaseResult
-
-from ..entity.dto import (
-    SearchByIdList, GetRankList, SearchByType, SearchByKeyword, 
-    DefaultSortWaterFall, PeItemWaterFall, GetPeItemDetail, LoadItemsByDeveloperId,
-    GetByItemId, GetEncryptKeyList
-)
-from ..entity.vo import PeItem, WaterFall, PeItemDetail, DownloadInfo, EncryptKey
 from ..entity import Response
+from ..entity.dto import (
+    SearchByIdList, GetRankList, SearchByType, SearchByKeyword, SearchSeasonMods, 
+    DefaultSortWaterFall, PeItemWaterFall, GetPeItemDetail, LoadItemsByDeveloperId,
+    GetByItemId, GetEncryptKeyList, PePurchaseItem
+)
+from ..entity.vo import (
+    PeItem, WaterFall, PeItemDetail, DownloadInfo, EncryptKey, 
+    BuyItemResult, PePurchaseItemOrder, PurchaseResult
+)
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -147,6 +144,7 @@ def get_encryption_key_list(client: 'Client', item_ids: List[str]) -> Response[E
         "POST",
         "/pe-item/get-encryption-key-list",
         body=body.to_json().encode(),
+        encrypt_body_type=2,
         target_entity_type=EncryptKey
     )
 
