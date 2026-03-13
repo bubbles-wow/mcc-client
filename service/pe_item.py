@@ -117,9 +117,10 @@ def get_detail_v2(client: 'Client', item_id: str) -> Response[PeItemDetail]:
         target_entity_type=PeItemDetail
     )
 
-def load_items_by_developer_info_id(client: 'Client', developer_info_id: int, offset: int = 0) -> Response[PeItem]:
+def load_items_by_developer_info_id(client: 'Client', developer_info_id: int, length: int = 12, offset: int = 0) -> Response[PeItem]:
     body = LoadItemsByDeveloperId(
         developer_info_id=developer_info_id,
+        length=length,
         offset=offset
     )
     return client.api_request(
