@@ -282,69 +282,60 @@ class Client:
             self.logger.error(123, f"Error updating serverlist: ({log_extra}, exception={e})")
             self.logger.error(123, traceback.format_exc())
 
-class ClientManager:
-    _clients: Dict[str, Client] = {}
-    _config: Optional[X19Config] = None
-
-    @classmethod
-    def init(cls, config_path: Path = None) -> None:
-        config_path = Path(__file__).parent / "config" / "x19.yaml" \
-            if config_path is None else config_path
-        _raw = load_config_as_obj(str(config_path))
-        cls._config = X19Config.from_any(_raw)
-
-    @classmethod
-    def get_client(cls, server_env: str, server_code: str = "x19", 
-                   session: Session = None, logger: CustomLogger = None, 
-                   force_relogin: bool = False) -> Client:
-        cache_key = f"{server_code}_{server_env}"
-        if cache_key in cls._clients:
-            return cls._clients[cache_key]
-        
-        if not cls._config:
-            raise RuntimeError("X19ClientManager not initialized. Call init() first.")
-
-        server_list = cls._config.server.get(server_code)
-        if not server_list:
-            return None
-        
-        server_detail = server_list.get(server_env)
-        if not server_detail or not server_detail.serverlist_url:
-            return None
-
-        server = Server(
-            serverlist_url=server_detail.serverlist_url,
-            server_env=server_env,
-            server_code=server_code,
-            api_host_flag=server_detail.api_host_flag,
-            etag="",
-            last_modified="",
-            serverlist=None
-        )
-
-        if session is None:
-            session = Session()
-        if logger is None:
-            logger = CustomLogger("x19_client")
-            
-        client = Client(
-            session=session,
-            logger=logger,
-            server=server,
-            sa_data=cls._config.sa_data,
-            sauth=cls._config.sauth,
-            session_config=cls._config.session,
-            api_config=server_detail.api_config,
-            client_config=cls._config.client,
-            force_relogin=force_relogin
-        )
-        if not client.is_logined():
-            return None
-        cls._clients[cache_key] = client
-        return client
-
 # initialize ClientManager
 if os.getenv("DEBUG", "False").lower() == "true":
-    ClientManager.init(client_base_path / "config" / "test_x19.yaml")
+    _config_path = client_base_path / "config" / "test_x19.yaml"
 else:
-    ClientManager.init()
+    _config_path = client_base_path / "config" / "x19.yaml"
+
+_clients: Dict[str, Client] = {}
+_config = X19Config.from_any(load_config_as_obj(str(_config_path)))
+
+def get_client(server_env: str, server_code: str = "x19", 
+                session: Session = None, logger: CustomLogger = None, 
+                force_relogin: bool = False) -> Client:
+    cache_key = f"{server_code}_{server_env}"
+    if cache_key in _clients:
+        return _clients[cache_key]
+    
+    if not _config:
+        raise RuntimeError("X19ClientManager not initialized. Call init() first.")
+
+    server_list = _config.server.get(server_code)
+    if not server_list:
+        return None
+    
+    server_detail = server_list.get(server_env)
+    if not server_detail or not server_detail.serverlist_url:
+        return None
+
+    server = Server(
+        serverlist_url=server_detail.serverlist_url,
+        server_env=server_env,
+        server_code=server_code,
+        api_host_flag=server_detail.api_host_flag,
+        etag="",
+        last_modified="",
+        serverlist=None
+    )
+
+    if session is None:
+        session = Session()
+    if logger is None:
+        logger = CustomLogger(f"{server_code}_{server_env}_client")
+        
+    client = Client(
+        session=session,
+        logger=logger,
+        server=server,
+        sa_data=_config.sa_data,
+        sauth=_config.sauth,
+        session_config=_config.session,
+        api_config=server_detail.api_config,
+        client_config=_config.client,
+        force_relogin=force_relogin
+    )
+    if not client.is_logined():
+        return None
+    _clients[cache_key] = client
+    return client

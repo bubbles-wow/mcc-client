@@ -1,1 +1,1 @@
-from .client import Client, ClientManager, client_base_path
+from .client import Client, client_base_path
