@@ -167,13 +167,17 @@ class Client:
         
     def _check_login_result(self, response: X19Response[User]) -> bool:
         if response is None or response.entity is None:
-            self.logger.error(151, "Login failed: No user info in response.")
-            return False
+            if not self.is_logined():
+                self.logger.error(151, "Login failed: No user info in response.")
+                return False
+            else:
+                return True
         self._update_user_info(response.entity)
-        return True
+        return self.is_logined()
         
     def is_logined(self) -> bool:
-        return self.user_info is not None and self.expires_at is not None and datetime.now(timezone(timedelta(hours=self.session_config.timezone))) < self.expires_at
+        tz = timezone(timedelta(hours=self.session_config.timezone))
+        return self.user_info is not None and self.expires_at is not None and datetime.now(tz) < self.expires_at
         
     def request(self, method: str, base_url: str, path: str, header: dict = None, body: bytes = b"", encrypt_body_type: int = 0, 
                            target_entity_type: Type[Entity] = None, **kwargs) -> X19Response | None:
