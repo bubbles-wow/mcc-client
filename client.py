@@ -2,7 +2,6 @@ import base64
 import os
 import json
 import traceback
-import uuid
 
 from pathlib import Path
 from logging import Logger
@@ -33,10 +32,7 @@ class Client:
         self.sa_data = SaData.from_any(sa_data)
         self.sauth = Sauth.from_any(sauth)
         
-        self.pc_client = client_config.pc
-        self.pe_client = client_config.pc_cocos
-        if self.sa_data.os_name == "android":
-            self.pe_client = client_config.android
+        self.client_config = client_config.config
         
         self.user_info: Optional[User] = None
         self.expires_at: Optional[datetime] = None
@@ -291,9 +287,8 @@ else:
 _clients: Dict[str, Client] = {}
 _config = X19Config.from_any(load_config_as_obj(str(_config_path)))
 
-def get_client(server_env: str, server_code: str = "x19", 
-                session: Session = None, logger: CustomLogger = None, 
-                force_relogin: bool = False) -> Client:
+def get_client(account_name: str, client_name: str, server_env: str, server_code: str = "x19", 
+                session: Session = None, logger: CustomLogger = None, force_relogin: bool = False) -> Client:
     cache_key = f"{server_code}_{server_env}"
     if cache_key in _clients:
         return _clients[cache_key]
@@ -324,15 +319,25 @@ def get_client(server_env: str, server_code: str = "x19",
     if logger is None:
         logger = CustomLogger(f"{server_code}_{server_env}_client")
         
+    client_config = _config.client.get(client_name)
+    if not client_config:
+        logger.error(102, f"Client config not found for client_name={client_name}")
+        return None
+    
+    account_config = _config.account.get(account_name)
+    if not account_config:
+        logger.error(103, f"Account config not found for account_name={account_name}")
+        return None
+        
     client = Client(
         session=session,
         logger=logger,
         server=server,
-        sa_data=_config.sa_data,
-        sauth=_config.sauth,
+        sa_data=account_config.sa_data,
+        sauth=account_config.sauth,
         session_config=_config.session,
         api_config=server_detail.api_config,
-        client_config=_config.client,
+        client_config=client_config,
         force_relogin=force_relogin
     )
     if not client.is_logined():

@@ -12,6 +12,7 @@ from .get_pe_item_detail import GetPeItemDetail
 from .get_rank_list import GetRankList
 from .load_items_by_developer_id import LoadItemsByDeveloperId
 from .login_otp import LoginOtp
+from .pe_authentication import PeAuthentication
 from .pe_item_water_fall import PeItemWaterFall
 from .pe_purchase_item import PePurchaseItem
 from .search_by_id_list import SearchByIdList

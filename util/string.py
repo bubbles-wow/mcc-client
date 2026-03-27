@@ -1,8 +1,12 @@
 import re
 import random
 
-from string import *
 from typing import Any
+from importlib.util import find_spec
+if find_spec("common.util.string") is not None:
+    from common.util.string import *
+else:
+    from string import *
 
 def to_snake_case(name: str) -> str:
     s1 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name)

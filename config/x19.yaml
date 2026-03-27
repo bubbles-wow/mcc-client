@@ -6,47 +6,72 @@ session:
 
 client:
   android:
-    engine_version: 3.7.15.288131
-    engine_hash: 0fb7b528b222a7a44a10b08e994c786e
-    patch_version: 3.7.37.290123
-    patch_hash: f08b83065052e2ccd3ca2defcb43c8c7
-    pay_channel: dashen_cloudgame
-    # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+    type: "android"
+    config: 
+      engine_version: 3.7.15.288131
+      engine_hash: 0fb7b528b222a7a44a10b08e994c786e
+      patch_version: 3.7.37.290123
+      patch_hash: f08b83065052e2ccd3ca2defcb43c8c7
+      pay_channel: dashen_cloudgame
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+  android_tech:
+    type: "android"
+    config: 
+      engine_version: 3.200.100.279901
+      engine_hash: 883e42b9df0bf93be5f5345fae6bcefa
+      patch_version: 3.200.100.279901
+      patch_hash: 13b838ede1ec74430bab34ccdb990636
+      pay_channel: dashen_cloudgame
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
   pc_cocos:
-    engine_version: 3.7.38.289966
-    engine_hash: b0fa87ec50a3b3eff78279fe064019c3
-    patch_version: 3.7.39.290140
-    patch_hash: e7276acfa36646f62456e7a1c6441779
-    pay_channel: netease
-    # sign_hash: 2b3e7ca013bb30a74d822579860c042b
-  pc:
-    version: 1.15.19.49668
+    type: "pc"
+    config:
+      engine_version: 3.7.38.289966
+      engine_hash: b0fa87ec50a3b3eff78279fe064019c3
+      patch_version: 3.7.39.290140
+      patch_hash: e7276acfa36646f62456e7a1c6441779
+      pay_channel: netease
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+  pc_cocos_tech:
+    type: "pc"
+    config:
+      engine_version: 3.5.100.279203
+      engine_hash: pc_cocos
+      patch_version: 3.5.100.279203
+      patch_hash: d41d8cd98f00b204e9800998ecf8427e
+      pay_channel: netease
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+  pc_java:
+    type: "mclauncher"
+    config:
+      version: 1.15.18.46492
 
-sa_data:
-  app_channel: 
-  core_num: 
-  cpu_digit: 
-  cpu_hz: 
-  cpu_name: 
-  device_model: 
-  first_udid: 
-  network: 
-  os_name: 
-  os_ver: 
-  ram: 
-  rom: 
-  root: 
-  udid: 
-
-sauth:
-  access_token: 
-  deviceid: 
-  get_access_token: 
-  ip: 
-  login_channel: 
-  sdkuid: 
-  sessionid: 
-  udid: 
+account:
+  main:
+    sa_data:
+      app_channel: 
+      core_num: 
+      cpu_digit: 
+      cpu_hz: 
+      cpu_name: 
+      device_model: 
+      first_udid: 
+      network: 
+      os_name: 
+      os_ver: 
+      ram: 
+      rom: 
+      root: 
+      udid: 
+    sauth:
+      access_token: 
+      deviceid: 
+      get_access_token: 
+      ip: 
+      login_channel: 
+      sdkuid: 
+      sessionid: 
+      udid: 
 
 .template:
   x19_default_api: &x19_default_api

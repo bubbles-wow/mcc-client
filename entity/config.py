@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Any, Optional
 
 from . import BaseEntity
 from .sa_data import SaData
@@ -46,14 +46,37 @@ class PcClientConfig(BaseEntity):
     
 @dataclass
 class ClientConfig(BaseEntity):
-    android: PeClientConfig = field(default_factory=PeClientConfig)
-    pc_cocos: PeClientConfig = field(default_factory=PeClientConfig)
-    pc: PcClientConfig = field(default_factory=PcClientConfig)
+    type: str = "pc"
+    config: Optional[PeClientConfig | PcClientConfig] = field(default_factory=PcClientConfig)
+
+    @classmethod
+    def from_any(cls, data: Any) -> "ClientConfig":
+        if data is None:
+            return cls()
+        
+        if not isinstance(data, dict):
+            return super().from_any(data)
+
+        client_type = data.get("type", "pc")
+        processed_data = data.copy()
+        raw_config = data.get("config")
+
+        if raw_config:
+            if client_type == "pe":
+                processed_data["config"] = PeClientConfig.from_any(raw_config)
+            else:
+                processed_data["config"] = PcClientConfig.from_any(raw_config)
+        
+        return super().from_any(processed_data)
+    
+@dataclass
+class AccountConfig(BaseEntity):
+    sa_data: SaData = field(default_factory=SaData)
+    sauth: Sauth = field(default_factory=Sauth)
 
 @dataclass
 class X19Config(BaseEntity):
     session: SessionConfig = field(default_factory=SessionConfig)
-    client: ClientConfig = field(default_factory=ClientConfig)
-    sa_data: SaData = field(default_factory=SaData)
-    sauth: Sauth = field(default_factory=Sauth)
+    client: dict[str, ClientConfig] = field(default_factory=dict)
+    account: dict[str, AccountConfig] = field(default_factory=dict)
     server: dict[str, dict[str, ServerDetailConfig]] = field(default_factory=dict)

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from mcc.entity.dto.login_otp import LoginOtp
 
 from ..entity import User, Response
-from ..entity.dto import LoginOtp, Authentication
+from ..entity.dto import LoginOtp, Authentication, PeAuthentication
 from ..entity.vo import Otp
 from ..util import crypto, string
 
@@ -26,13 +26,13 @@ def login_otp(client: 'Client') -> Response[Otp] | None:
 def authentication_otp(client: 'Client', otp: Otp) -> Response[User] | None:
     if not otp:
         return
-    client.sa_data.app_ver = client.pc_client.version
+    client.sa_data.app_ver = client.client_config.version
     body = Authentication(
         sa_data=client.sa_data.to_json(),
         sauth_json=client.sauth.to_json(),
         otp_token=otp.otp_token,
         aid=otp.aid,
-        version=client.pc_client.to_dict()
+        version=client.client_config.to_dict()
     )
     config = client.api_config.authentication_otp
     return client.request(
@@ -47,19 +47,20 @@ def authentication_otp(client: 'Client', otp: Otp) -> Response[User] | None:
 
 def pe_authentication(client: 'Client') -> Response[User] | None:
     seed = str(uuid.uuid4())
-    message = client.pe_client.engine_version + client.pe_client.engine_hash + \
-        client.pe_client.patch_version + client.pe_client.patch_hash + \
-            client.pe_client.sign_hash + seed
-    client.sa_data.app_ver = client.pe_client.patch_version
-    body = Authentication(
-        engine_version=client.pe_client.engine_version,
+    message = client.client_config.engine_version + client.client_config.engine_hash + \
+        client.client_config.patch_version + client.client_config.patch_hash + \
+            client.client_config.sign_hash + seed
+    client.sa_data.app_ver = client.client_config.patch_version
+    body = PeAuthentication(
+        engine_version=client.client_config.engine_version,
         message=message,
-        patch_version=client.pe_client.patch_version,
-        pay_channel=client.pe_client.pay_channel,
+        patch_version=client.client_config.patch_version,
+        pay_channel=client.client_config.pay_channel,
         sa_data=client.sa_data.to_json(),
         sauth_json=client.sauth,
         seed=seed,
         sign=crypto.pe_auth_sign(message)
+        # sign=crypto.pe_auth_sign_old(message, 2, 9)
     )
     config = client.api_config.pe_authentication
     return client.request(
