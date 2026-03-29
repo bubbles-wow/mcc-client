@@ -189,93 +189,7 @@ def compute_dynamic_token(path: str, body: bytes, token: str) -> str:
     
     return result[:16] + "1"
 
-def pe_auth_sign_old(v: str, sp: int, tr: int) -> str:
-    # 常量表 b
-    b = bytes([
-        0x62, 0x25, 0x1e, 0xf6, 0x40, 0xb3, 0x40, 0xc0, 0x51, 0x5a, 0x5e, 0x26, 0xaa, 0xc7, 0xb6, 0xe9,
-        0x44, 0xea, 0xbe, 0xa4, 0xa9, 0xcf, 0xde, 0x4b, 0x60, 0x4b, 0xbb, 0xf6, 0x70, 0xbc, 0xbf, 0xbe,
-        0xc3, 0x59, 0x5b, 0x65, 0x92, 0xcc, 0x0c, 0x8f, 0x7d, 0xf4, 0xef, 0xff, 0xd1, 0x5d, 0x84, 0x85,
-        0xc6, 0x7e, 0x9b, 0x28, 0xfa, 0x27, 0xa1, 0xea, 0x85, 0x30, 0xef, 0xd4, 0x05, 0x1d, 0x88, 0x04,
-        0xe6, 0xcd, 0xe1, 0x21, 0xd6, 0x07, 0x37, 0xc3, 0x87, 0x0d, 0xd5, 0xf4, 0xed, 0x14, 0x5a, 0x45,
-    ])
-    
-    # 位移表 qTable
-    q_table = bytes([
-        0x01, 0x06, 0x0a, 0x0d, 0x02, 0x05, 0x09, 0x0e, 0x04, 0x07, 0x0b, 0x03, 0x03, 0x08, 0x0b, 0x05,
-        0x01, 0x07, 0x0b, 0x0e,
-    ])
-
-    if sp < 0 or tr <= 0:
-        raise ValueError("invalid sp/tr parameters")
-    if 16 * sp + 16 > len(b):
-        raise ValueError(f"sp={sp} out of range for constant table")
-    if 4 * sp + 4 > len(q_table):
-        raise ValueError(f"sp={sp} out of range for shift table")
-
-    # 1. 补齐字符串到 4 字节边界
-    rem = len(v) % 4
-    if rem != 0:
-        v += "0" * (4 - rem)
-
-    # 2. 将字符串转换为大端序 uint32 数组 (p)
-    a = v.encode('latin-1')
-    p = []
-    for i in range(0, len(a), 4):
-        # Go 逻辑: uint32(a[i])<<24 | uint32(a[i+1])<<16 | uint32(a[i+2])<<8 | uint32(a[i+3])
-        val = struct.unpack('>I', a[i:i+4])[0]
-        p.append(val)
-
-    # 3. 补齐 p 到 64 的倍数
-    rem_p = len(p) % 64
-    if rem_p != 0:
-        p.extend([0xabcde987] * (64 - rem_p))
-
-    # 4. 初始化上下文常量 c (小端序)
-    c = []
-    for i in range(4):
-        offset = 16 * sp + i * 4
-        c.append(struct.unpack('<I', b[offset:offset+4])[0])
-
-    # 5. 获取位移量 q
-    q = list(q_table[4*sp : 4*sp+4])
-
-    # 6. 核心哈希逻辑
-    r, u, x, z = 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
-
-    MASK = 0xffffffff
-
-    for t in range(tr):
-        for j in range(0, len(p), 4):
-            # 第一轮: r
-            a1 = (r + ((u & x) | (~u & z))) & MASK
-            val1 = (a1 + p[j] + c[0]) & MASK
-            shift1 = (val1 << q[0]) & MASK
-            r = (u + shift1) & MASK
-
-            # 第二轮: u
-            a2 = (r + ((u & z) | (~z & x))) & MASK
-            val2 = (a2 + p[j] + c[1]) & MASK
-            shift2 = (val2 << q[1]) & MASK
-            u = (u + shift2) & MASK
-
-            # 第三轮: x
-            a3 = (r + (u ^ x ^ z)) & MASK
-            val3 = (a3 + p[j] + c[2]) & MASK
-            shift3 = (val3 << q[2]) & MASK
-            x = (u + shift3) & MASK
-
-            # 第四轮: z
-            term = (x ^ (u | z)) & MASK
-            a4 = (r + term) & MASK
-            val4 = (a4 + p[j] + c[3]) & MASK
-            shift4 = (val4 << q[3]) & MASK
-            z = (u + shift4) & MASK
-
-    # 7. 输出转换为字节序列 (小端序) 并进行 Base64 编码
-    out = struct.pack('<IIII', r, u, x, z)
-    return base64.b64encode(out).decode('utf-8')
-
-def pe_auth_sign(data: str) -> str:
+def pe_auth_sign_v1(data: str) -> str:
     un_encrypted = data
     while len(un_encrypted) % 4 != 0:
         un_encrypted += "0"
@@ -364,6 +278,78 @@ def pe_auth_sign(data: str) -> str:
 
     result_bytes = struct.pack("<IIII", *L2)
     return base64.b64encode(result_bytes).decode('utf-8')
+
+def pe_auth_sign_v2(v: str, sp: int, tr: int) -> str:
+    b = bytes([
+        0x62, 0x25, 0x1e, 0xf6, 0x40, 0xb3, 0x40, 0xc0, 0x51, 0x5a, 0x5e, 0x26, 0xaa, 0xc7, 0xb6, 0xe9,
+        0x44, 0xea, 0xbe, 0xa4, 0xa9, 0xcf, 0xde, 0x4b, 0x60, 0x4b, 0xbb, 0xf6, 0x70, 0xbc, 0xbf, 0xbe,
+        0xc3, 0x59, 0x5b, 0x65, 0x92, 0xcc, 0x0c, 0x8f, 0x7d, 0xf4, 0xef, 0xff, 0xd1, 0x5d, 0x84, 0x85,
+        0xc6, 0x7e, 0x9b, 0x28, 0xfa, 0x27, 0xa1, 0xea, 0x85, 0x30, 0xef, 0xd4, 0x05, 0x1d, 0x88, 0x04,
+        0xe6, 0xcd, 0xe1, 0x21, 0xd6, 0x07, 0x37, 0xc3, 0x87, 0x0d, 0xd5, 0xf4, 0xed, 0x14, 0x5a, 0x45,
+    ])
+    
+    q_table = bytes([
+        0x01, 0x06, 0x0a, 0x0d, 0x02, 0x05, 0x09, 0x0e, 0x04, 0x07, 0x0b, 0x03, 0x03, 0x08, 0x0b, 0x05,
+        0x01, 0x07, 0x0b, 0x0e,
+    ])
+
+    if sp < 0 or tr <= 0:
+        raise ValueError("invalid sp/tr parameters")
+    if 16 * sp + 16 > len(b):
+        raise ValueError(f"sp={sp} out of range for constant table")
+    if 4 * sp + 4 > len(q_table):
+        raise ValueError(f"sp={sp} out of range for shift table")
+
+    rem = len(v) % 4
+    if rem != 0:
+        v += "0" * (4 - rem)
+
+    a = v.encode('latin-1')
+    p = []
+    for i in range(0, len(a), 4):
+        val = struct.unpack('>I', a[i:i+4])[0]
+        p.append(val)
+
+    rem_p = len(p) % 64
+    if rem_p != 0:
+        p.extend([0xabcde987] * (64 - rem_p))
+
+    c = []
+    for i in range(4):
+        offset = 16 * sp + i * 4
+        c.append(struct.unpack('<I', b[offset:offset+4])[0])
+
+    q = list(q_table[4*sp : 4*sp+4])
+
+    r, u, x, z = 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
+
+    MASK = 0xffffffff
+
+    for t in range(tr):
+        for j in range(0, len(p), 4):
+            a1 = (r + ((u & x) | (~u & z))) & MASK
+            val1 = (a1 + p[j] + c[0]) & MASK
+            shift1 = (val1 << q[0]) & MASK
+            r = (u + shift1) & MASK
+
+            a2 = (r + ((u & z) | (~z & x))) & MASK
+            val2 = (a2 + p[j] + c[1]) & MASK
+            shift2 = (val2 << q[1]) & MASK
+            u = (u + shift2) & MASK
+
+            a3 = (r + (u ^ x ^ z)) & MASK
+            val3 = (a3 + p[j] + c[2]) & MASK
+            shift3 = (val3 << q[2]) & MASK
+            x = (u + shift3) & MASK
+
+            term = (x ^ (u | z)) & MASK
+            a4 = (r + term) & MASK
+            val4 = (a4 + p[j] + c[3]) & MASK
+            shift4 = (val4 << q[3]) & MASK
+            z = (u + shift4) & MASK
+
+    out = struct.pack('<IIII', r, u, x, z)
+    return base64.b64encode(out).decode('utf-8')
 
 def get_decrypt_key(user_id: str, content_key: bytes, device_id: str = "123456") -> str:
     if not content_key:

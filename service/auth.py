@@ -46,6 +46,7 @@ def authentication_otp(client: 'Client', otp: Otp) -> Response[User] | None:
     
 
 def pe_authentication(client: 'Client') -> Response[User] | None:
+    config = client.api_config.pe_authentication
     seed = str(uuid.uuid4())
     message = client.client_config.engine_version + client.client_config.engine_hash + \
         client.client_config.patch_version + client.client_config.patch_hash + \
@@ -56,16 +57,18 @@ def pe_authentication(client: 'Client') -> Response[User] | None:
         message=message,
         patch_version=client.client_config.patch_version,
         pay_channel=client.client_config.pay_channel,
-        sa_data=client.sa_data.to_json(),
+        sa_data=client.sa_data.to_json() + "\n",
         sauth_json=client.sauth,
         seed=seed,
-        sign=crypto.pe_auth_sign(message)
-        # sign=crypto.pe_auth_sign_old(message, 2, 9)
+        # sign=crypto.pe_auth_sign_v1(message)
+        sign=crypto.pe_auth_sign_v2(message, 
+                                    config.extra_param.get("sign_sp", 3), 
+                                    config.extra_param.get("sign_tr", 9))
     )
-    config = client.api_config.pe_authentication
     return client.request(
         method="POST",
-        base_url=getattr(client.server.serverlist, string.to_snake_case(config.host)) if config.host else client.server.serverlist.core_server_url,
+        base_url=getattr(client.server.serverlist, string.to_snake_case(config.host)) \
+            if config.host else client.server.serverlist.core_server_url,
         path=config.path if config.path else "/pe-authentication",
         body=body.to_json().encode(),
         encrypt_body_type=config.encrypt_body_type,

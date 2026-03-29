@@ -15,9 +15,9 @@ class SaData(BaseEntity):
     device_model: str = "Win32"
     device_width: str = "1080"
     disk: str = ""
-    emulator: str = "0"
+    emulator: int = 0
     first_udid: Optional[str] = None
-    is_guest: str = "0"
+    is_guest: int = 0
     launcher_type: str = "PE_C++"
     mac_addr: str = "12-34-56-78-90-AB"
     network: str = ""

@@ -26,3 +26,8 @@ def rand_string_runes(n: int) -> str:
 
 def is_empty(s: str) -> bool:
     return s is None or s.strip() == ""
+
+def save_format(original: str, template: dict[str, str]) -> str:
+    for key, val in template.items():
+        original = original.replace(f"{{{key}}}", str(val))
+    return original

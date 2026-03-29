@@ -17,6 +17,7 @@ class ApiDetailConfig(BaseEntity):
     host: str = ""
     path: str = ""
     encrypt_body_type: int = 0
+    extra_param: Optional[dict] = field(default_factory=dict)
 
 @dataclass
 class ApiConfig(BaseEntity):
@@ -48,6 +49,7 @@ class PcClientConfig(BaseEntity):
 class ClientConfig(BaseEntity):
     type: str = "pc"
     config: Optional[PeClientConfig | PcClientConfig] = field(default_factory=PcClientConfig)
+    sa_data: Optional[SaData] = None
 
     @classmethod
     def from_any(cls, data: Any) -> "ClientConfig":
@@ -78,5 +80,5 @@ class AccountConfig(BaseEntity):
 class X19Config(BaseEntity):
     session: SessionConfig = field(default_factory=SessionConfig)
     client: dict[str, ClientConfig] = field(default_factory=dict)
-    account: dict[str, AccountConfig] = field(default_factory=dict)
+    account: dict[str, Sauth] = field(default_factory=dict)
     server: dict[str, dict[str, ServerDetailConfig]] = field(default_factory=dict)

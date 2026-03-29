@@ -1,77 +1,9 @@
 session:
   path: session/
   expired: 1800
-  timezone: 0
-  file_name: "{server_code}_{server_env}.session"
+  timezone: 8
+  file_name: "{server_code}-{account_name}-{server_env}.session"
 
-client:
-  android:
-    type: "android"
-    config: 
-      engine_version: 3.7.15.288131
-      engine_hash: 0fb7b528b222a7a44a10b08e994c786e
-      patch_version: 3.7.37.290123
-      patch_hash: f08b83065052e2ccd3ca2defcb43c8c7
-      pay_channel: dashen_cloudgame
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
-  android_tech:
-    type: "android"
-    config: 
-      engine_version: 3.200.100.279901
-      engine_hash: 883e42b9df0bf93be5f5345fae6bcefa
-      patch_version: 3.200.100.279901
-      patch_hash: 13b838ede1ec74430bab34ccdb990636
-      pay_channel: dashen_cloudgame
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
-  pc_cocos:
-    type: "pc"
-    config:
-      engine_version: 3.7.38.289966
-      engine_hash: b0fa87ec50a3b3eff78279fe064019c3
-      patch_version: 3.7.39.290140
-      patch_hash: e7276acfa36646f62456e7a1c6441779
-      pay_channel: netease
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
-  pc_cocos_tech:
-    type: "pc"
-    config:
-      engine_version: 3.5.100.279203
-      engine_hash: pc_cocos
-      patch_version: 3.5.100.279203
-      patch_hash: d41d8cd98f00b204e9800998ecf8427e
-      pay_channel: netease
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
-  pc_java:
-    type: "mclauncher"
-    config:
-      version: 1.15.18.46492
-
-account:
-  main:
-    sa_data:
-      app_channel: 
-      core_num: 
-      cpu_digit: 
-      cpu_hz: 
-      cpu_name: 
-      device_model: 
-      first_udid: 
-      network: 
-      os_name: 
-      os_ver: 
-      ram: 
-      rom: 
-      root: 
-      udid: 
-    sauth:
-      access_token: 
-      deviceid: 
-      get_access_token: 
-      ip: 
-      login_channel: 
-      sdkuid: 
-      sessionid: 
-      udid: 
 
 .template:
   x19_default_api: &x19_default_api
@@ -81,7 +13,95 @@ account:
 
   g79_default_api: &g79_default_api
     authentication_update: { encrypt_body_type: 2 }
-    pe_authentication:     { encrypt_body_type: 4 }
+    pe_authentication:
+      encrypt_body_type: 4
+      extra_param:
+        sign_sp: 3
+        sign_tr: 9
+  
+  sa_data_mumu_android: &sa_data_mumu_android
+    app_channel: netease
+    core_num: 
+    cpu_digit: 64
+    cpu_hz: 
+    cpu_name: 
+    device_model: 
+    first_udid: 
+    network: CHANNEL_UNKNOW
+    os_name: android
+    os_ver: 
+    ram: 
+    rom: 
+    root: 
+    udid: 
+
+  sa_data_vm_win: &sa_data_vm_win 
+    core_num: 
+    cpu_name: 
+    device_height: 
+    device_width: 
+    first_udid: 
+    udid: 
+
+client:
+  android:
+    type: "pe"
+    config: 
+      engine_version: 3.7.15.288131
+      engine_hash: 0fb7b528b222a7a44a10b08e994c786e
+      patch_version: 3.7.37.290123
+      patch_hash: f08b83065052e2ccd3ca2defcb43c8c7
+      pay_channel: dashen_cloudgame
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+    sa_data: *sa_data_mumu_android
+  android_tech:
+    type: "pe"
+    config: 
+      engine_version: 3.200.100.279901
+      engine_hash: 883e42b9df0bf93be5f5345fae6bcefa
+      patch_version: 3.200.104.280674
+      patch_hash: f000ab0922db96f0ce87d49ea0a74c83
+      pay_channel: dashen_cloudgame
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+    sa_data:
+      <<: *sa_data_mumu_android
+      cpu_name: placeholder
+      ram: 8351973376
+  pc_cocos:
+    type: "pe"
+    config:
+      engine_version: 3.7.40.290695
+      engine_hash: 74b9ba9a2454db6f694fbfcf1f6faf5d
+      patch_version: 3.7.41.290704
+      patch_hash: f86bf1f9830f621afb7d7f65b428ae30
+      pay_channel: netease
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+    sa_data: *sa_data_vm_win
+  pc_cocos_tech:
+    type: "pe"
+    config:
+      engine_version: 3.5.100.279203
+      engine_hash: pc_cocos
+      patch_version: 3.5.100.279203
+      patch_hash: d41d8cd98f00b204e9800998ecf8427e
+      pay_channel: netease
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+    sa_data: *sa_data_vm_win
+  pc_java:
+    type: "pc"
+    config:
+      version: 1.15.18.46492
+    sa_data: *sa_data_vm_win
+
+account:
+  phone: 
+    access_token: 
+    deviceid: 
+    get_access_token: 
+    ip: 
+    sdkuid: 
+    sessionid: 
+    udid: 
 
 server:
   x19:
@@ -148,12 +168,7 @@ server:
       api_host_flag: 0
     ios: 
       serverlist_url: https://g79.update.netease.com/serverlist/ios_review_forever.json
-      api_config:
-        <<: *g79_default_api
-        authentication_update: 
-          encrypt_body_type: 0
-        pe_authentication: 
-          encrypt_body_type: 0
+      api_config: *g79_default_api
       api_host_flag: 0
     moyinglong: 
       serverlist_url: https://g79.update.netease.com/serverlist/moyinglong.json
@@ -189,7 +204,13 @@ server:
       api_host_flag: 0
     tech: 
       serverlist_url: https://g79.update.netease.com/serverlist/tech.0.2.json
-      api_config: *g79_default_api
+      api_config: 
+        <<: *g79_default_api
+        pe_authentication:
+          encrypt_body_type: 4
+          extra_param:
+            sign_sp: 1
+            sign_tr: 8
       api_host_flag: 0
     tesm: 
       serverlist_url: https://g79.update.netease.com/serverlist/tesm.0.2.json

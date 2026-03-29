@@ -8,40 +8,60 @@ from logging import Logger
 from requests import Response, Session
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional, Type
+from dataclasses import dataclass, field
 
 from .util import load_config_as_obj, http, CustomLogger, crypto, string
 from .entity import (
-    SaData, Sauth, Server, Response as X19Response, 
-    Entity, User, Serverlist, ApiConfig, SessionConfig, X19Config,
-    ClientConfig
+    Server, Response as X19Response, Entity, User, Serverlist, 
+    ApiConfig, SessionConfig, X19Config, AccountConfig,
+    ClientConfig, Sauth
 )
 from .service import auth
 from .util import crypto, string
 
 client_base_path = Path(__file__).parent
 
+@dataclass
+class ClientContext:
+    session: Session
+    logger: Logger
+    server: Server
+    client_name: str
+    client_config: ClientConfig
+    account_name: str
+    account_config: Sauth
+    api_config: ApiConfig
+    session_config: SessionConfig = field(default_factory=SessionConfig)
+
 class Client:
-    def __init__(self, session: Session, logger: Logger, server: Server, sa_data: SaData, sauth: Sauth, 
-                 session_config: SessionConfig, api_config: ApiConfig, client_config: ClientConfig, 
-                 force_relogin: bool = False) -> None:
-        self.session = session
-        self.logger = logger
-        self.server = server
-        self.api_config = api_config
+    def __init__(self, client_context: ClientContext, force_relogin: bool = False) -> None:
+        self.session = client_context.session
+        self.logger = client_context.logger
+        self.server = client_context.server
+        self.api_config = client_context.api_config
         
-        self.sa_data = SaData.from_any(sa_data)
-        self.sauth = Sauth.from_any(sauth)
+        self.sa_data = client_context.client_config.sa_data
+        self.sauth = client_context.account_config
         
-        self.client_config = client_config.config
+        self.client_config = client_context.client_config.config
         
         self.user_info: Optional[User] = None
         self.expires_at: Optional[datetime] = None
         
-        self.session_config = session_config
+        self.session_config = client_context.session_config
         
-        self.session_dir = session_config.path
-        self.session_path = os.path.join(self.session_dir, session_config.file_name
-                                         .format(server_env=server.server_env, server_code=server.server_code))
+        self.session_dir = self.session_config.path
+        
+        session_fields = {
+            "server_env": self.server.server_env,
+            "server_code": self.server.server_code,
+            "client_name": client_context.client_name,
+            "account_name": client_context.account_name
+        }
+        
+        self.session_path = os.path.join(self.session_dir, string.save_format(
+            self.session_config.file_name, session_fields))
+        
         self._load_session()
         self._update_serverlist()
         
@@ -328,18 +348,20 @@ def get_client(account_name: str, client_name: str, server_env: str, server_code
     if not account_config:
         logger.error(103, f"Account config not found for account_name={account_name}")
         return None
-        
-    client = Client(
+    
+    client_context = ClientContext(
         session=session,
         logger=logger,
         server=server,
-        sa_data=account_config.sa_data,
-        sauth=account_config.sauth,
-        session_config=_config.session,
-        api_config=server_detail.api_config,
+        client_name=client_name,
         client_config=client_config,
-        force_relogin=force_relogin
+        account_name=account_name,
+        account_config=account_config,
+        api_config=server_detail.api_config,
+        session_config=_config.session
     )
+        
+    client = Client(client_context=client_context, force_relogin=force_relogin)
     if not client.is_logined():
         return None
     _clients[cache_key] = client

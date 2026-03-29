@@ -15,3 +15,4 @@ class PeAuthentication(BaseEntity):
     sauth_json: Optional[Sauth] = None
     seed: Optional[str] = None
     sign: Optional[str] = None
+    version: Optional[dict] = None
