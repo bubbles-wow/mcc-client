@@ -94,7 +94,7 @@ client:
     sa_data: *sa_data_vm_win
 
 account:
-  phone: 
+  email_check: 
     access_token: 
     deviceid: 
     get_access_token: 

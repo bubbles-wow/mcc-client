@@ -25,13 +25,3 @@ class Sauth(BaseEntity):
     step: Optional[str] = None
     step2: Optional[str] = None
     udid: Optional[str] = None
-    
-    def to_dict(self) -> dict[str, Any]:
-        result = {}
-        for field in fields(self):
-            value = getattr(self, field.name)
-            result[field.name] = self._serialize_value(value)
-        if self.platform == "pc":
-            del result["step"]
-            del result["step2"]
-        return result
