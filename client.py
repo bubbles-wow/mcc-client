@@ -1,6 +1,7 @@
 import base64
 import os
 import json
+import time
 import traceback
 
 from pathlib import Path
@@ -156,6 +157,8 @@ class Client:
                                           f"code={status_code}, message={json_data.get('message', 'None')}, response_body={json.dumps(json_data)})"))
                 if status_code == 10 or status_code == 22:
                     self.logger.info(143, "Session expired, re-login required.")
+                    # avoid rate limit
+                    time.sleep(2)
                     self._login()
                 return False
             return True

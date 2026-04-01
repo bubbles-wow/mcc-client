@@ -1,3 +1,5 @@
+import json
+
 from dataclasses import dataclass, fields
 from typing import Optional, Any
 
@@ -20,7 +22,9 @@ class PeAuthentication(BaseEntity):
     
     def to_dict(self) -> dict:
         result = super().to_dict()
-        if isinstance(self.sa_data, SaData) and self.sa_data.os_name == "windows":
+        sa_data_obj = SaData.from_any(json.loads(self.sa_data))
+        if isinstance(sa_data_obj, SaData) and sa_data_obj.os_name == "windows":
             del result["sauth_json"]["step"]
             del result["sauth_json"]["step2"]
+        del sa_data_obj
         return result
