@@ -49,8 +49,8 @@ client:
     config: 
       engine_version: 3.7.15.288131
       engine_hash: 0fb7b528b222a7a44a10b08e994c786e
-      patch_version: 3.7.37.290123
-      patch_hash: f08b83065052e2ccd3ca2defcb43c8c7
+      patch_version: 3.7.41.291474
+      patch_hash: d884500928b0c0b2bf78eda4a11b9719
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
     sa_data: *sa_data_mumu_android
@@ -70,10 +70,10 @@ client:
   pc_cocos:
     type: "pe"
     config:
-      engine_version: 3.7.40.290695
-      engine_hash: 74b9ba9a2454db6f694fbfcf1f6faf5d
-      patch_version: 3.7.41.290704
-      patch_hash: f86bf1f9830f621afb7d7f65b428ae30
+      engine_version: 3.7.44.291423
+      engine_hash: 3eee835a54a6abb5d953dcefb729d498
+      patch_version: 3.7.45.291477
+      patch_hash: 8e2131a0a350cbc5cd24bfc734df6852
       pay_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
     sa_data: *sa_data_vm_win

@@ -364,6 +364,7 @@ def get_client(account_name: str, client_name: str, server_env: str, server_code
         session_config=_config.session
     )
         
+    logger.info(104, f"Request get client (client_context={client_context})")
     client = Client(client_context=client_context, force_relogin=force_relogin)
     if not client.is_logined():
         return None
