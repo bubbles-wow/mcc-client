@@ -205,7 +205,12 @@ class Client:
         if string.is_empty(base_url):
             self.logger.error(101, f"Base URL is empty for API request! (method={method}, path={path})")
             return None
-                            
+        if header is None:
+            header = {
+                "User-Agent": "libhttpclient/1.0.0.0"
+            }
+        else:
+            header.setdefault("User-Agent", "libhttpclient/1.0.0.0")
         final_body = self._encrypt_body(body, encrypt_body_type=encrypt_body_type)
         self.logger.info(100, (f"Preparing request. (method={method}, url={base_url + path}, headers={header}, body={body.decode('utf-8', errors='replace')}, "
                                f"final_body_base64={base64.b64encode(final_body).decode()}, encrypt_body_type={encrypt_body_type})"))
