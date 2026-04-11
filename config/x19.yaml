@@ -49,8 +49,8 @@ client:
     config: 
       engine_version: 3.7.15.288131
       engine_hash: 0fb7b528b222a7a44a10b08e994c786e
-      patch_version: 3.7.41.291474
-      patch_hash: d884500928b0c0b2bf78eda4a11b9719
+      patch_version: 3.7.42.291632
+      patch_hash: 8bedb34c0b641d76e5d0f1ed055f42a6
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
     sa_data: *sa_data_mumu_android
