@@ -46,6 +46,7 @@ def authentication_otp(client: 'Client', otp: Otp) -> Response[User] | None:
     
 
 def pe_authentication(client: 'Client') -> Response[User] | None:
+    client_config = client.client_config
     config = client.api_config.pe_authentication
     seed = str(uuid.uuid4())
     message = client.client_config.engine_version + client.client_config.engine_hash + \
@@ -61,9 +62,7 @@ def pe_authentication(client: 'Client') -> Response[User] | None:
         sauth_json=client.sauth,
         seed=seed,
         # sign=crypto.pe_auth_sign_v1(message)
-        sign=crypto.pe_auth_sign_v2(message, 
-                                    config.extra_param.get("sign_sp", 3), 
-                                    config.extra_param.get("sign_tr", 9))
+        sign=crypto.pe_auth_sign_v2(message, client_config.sign_sp, client_config.sign_tr)
     )
     return client.request(
         method="POST",

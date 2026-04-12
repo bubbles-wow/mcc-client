@@ -39,6 +39,8 @@ class PeClientConfig(BaseEntity):
     patch_version: str
     patch_hash: str
     sign_hash: str = "2b3e7ca013bb30a74d822579860c042b"
+    sign_sp: int = 3
+    sign_tr: int = 9
     pay_channel: str = "netease"
 
 @dataclass

@@ -13,11 +13,7 @@ session:
 
   g79_default_api: &g79_default_api
     authentication_update: { encrypt_body_type: 2 }
-    pe_authentication:
-      encrypt_body_type: 4
-      extra_param:
-        sign_sp: 3
-        sign_tr: 9
+    pe_authentication: { encrypt_body_type: 4 }
   
   sa_data_mumu_android: &sa_data_mumu_android
     app_channel: netease
@@ -44,6 +40,18 @@ session:
     udid: 
 
 client:
+  android_3.8:
+    type: "pe"
+    config: 
+      engine_version: 3.8.0.291861
+      engine_hash: 7d6ccd52b3cc3b4f06e1fe7f6f376245
+      patch_version: 3.8.1.291867
+      patch_hash: f0c241be1f738afb645ca64b158e06ec
+      pay_channel: dashen_cloudgame
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      sign_sp: 4
+      sign_tr: 7
+    sa_data: *sa_data_mumu_android
   android:
     type: "pe"
     config: 
@@ -53,6 +61,8 @@ client:
       patch_hash: 8bedb34c0b641d76e5d0f1ed055f42a6
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      sign_sp: 3
+      sign_tr: 9
     sa_data: *sa_data_mumu_android
   android_tech:
     type: "pe"
@@ -63,10 +73,9 @@ client:
       patch_hash: f000ab0922db96f0ce87d49ea0a74c83
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
-    sa_data:
-      <<: *sa_data_mumu_android
-      cpu_name: placeholder
-      ram: 8351973376
+      sign_sp: 1
+      sign_tr: 8
+    sa_data: *sa_data_mumu_android
   pc_cocos:
     type: "pe"
     config:
@@ -76,6 +85,8 @@ client:
       patch_hash: 8e2131a0a350cbc5cd24bfc734df6852
       pay_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      sign_sp: 3
+      sign_tr: 9
     sa_data: *sa_data_vm_win
   pc_cocos_tech:
     type: "pe"
@@ -86,6 +97,8 @@ client:
       patch_hash: d41d8cd98f00b204e9800998ecf8427e
       pay_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      sign_sp: 1
+      sign_tr: 8
     sa_data: *sa_data_vm_win
   pc_java:
     type: "pc"
