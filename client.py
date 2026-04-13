@@ -113,7 +113,7 @@ class Client:
                     
         except Exception as e:
             self.logger.error(130, f"Failed to load session from {self.session_path} (exception={e})")
-            self.logger.error(130, traceback.format_)
+            self.logger.error(130, traceback.format_exc())
             pass
         
     def _encrypt_body(self, body: bytes, encrypt_body_type: int) -> bytes:
