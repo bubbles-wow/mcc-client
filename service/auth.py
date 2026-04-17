@@ -84,5 +84,6 @@ def authentication_update(client: 'Client') -> Response[User] | None:
         path=config.path if config.path else "/authentication/update",
         body=client.user_info.to_json().encode(),
         encrypt_body_type=config.encrypt_body_type,
-        target_entity_type=User
+        target_entity_type=User,
+        auto_refresh=False
     )

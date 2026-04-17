@@ -50,7 +50,7 @@ class Client:
         self.expires_at: Optional[datetime] = None
         
         self.session_config = client_context.session_config
-        
+        self.session_last_modified = 0.0
         self.session_dir = self.session_config.path
         
         session_fields = {
@@ -63,8 +63,7 @@ class Client:
         self.session_path = os.path.join(self.session_dir, string.save_format(
             self.session_config.file_name, session_fields))
         
-        self._load_session()
-        self._update_serverlist()
+        self._refresh_session(force_relogin=force_relogin)
         
         api_host_list = [
             self.server.serverlist.api_gateway_url,
@@ -75,24 +74,28 @@ class Client:
             if 0 <= self.server.api_host_flag < len(api_host_list) \
             else self.server.serverlist.api_gateway_url
         del api_host_list
-        
-        self._refresh_session(force_relogin=force_relogin)
             
     def _refresh_session(self, force_relogin: bool = False):
-        tz = timezone(timedelta(hours=self.session_config.timezone))
-        if force_relogin or self.user_info is None or self.expires_at is None:
+        if force_relogin:
             self._login()
-        elif datetime.now(tz) >= self.expires_at:
-            self._check_login_result(auth.authentication_update(self))
+        else:
+            tz = timezone(timedelta(hours=self.session_config.timezone))
+            self._load_session()
+
+            if self.user_info is None or self.expires_at is None:
+                self._login()
+            elif datetime.now(tz) >= self.expires_at:
+                if not self._check_login_result(auth.authentication_update(self)):
+                    self._login()
 
     def _load_session(self):
-        if not os.path.exists(self.session_path):
+        if not os.path.exists(self.session_path) or os.path.getmtime(self.session_path) == self.session_last_modified:
             return
             
         try:
             with open(self.session_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                
+                self.session_last_modified = os.path.getmtime(self.session_path)
                 if data.get("expires_at"):
                     dt = datetime.fromisoformat(data["expires_at"])
                     if dt.tzinfo is None:
@@ -111,6 +114,7 @@ class Client:
                     if dyn.get("serverlist"):
                         self.server.serverlist = Serverlist.from_any(dyn["serverlist"])
                     
+            self._update_serverlist()
         except Exception as e:
             self.logger.error(130, f"Failed to load session from {self.session_path} (exception={e})")
             self.logger.error(130, traceback.format_exc())
@@ -144,7 +148,7 @@ class Client:
             final_body = crypto.g79_http_decrypt(encrypted_bytes)
         return final_body
         
-    def _data_verify(self, response: Response, encrypt_body_type: int = 0) -> bool:
+    def _data_verify(self, response: Response, encrypt_body_type: int = 0, auto_refresh: bool = True) -> bool:
         try:
             json_data = json.loads(self._decrypt_body(response.content, encrypt_body_type=encrypt_body_type).decode('utf-8'))
             if not isinstance(json_data, dict):
@@ -156,10 +160,11 @@ class Client:
                 self.logger.warning(141, (f"Unexpected response code! (url={response.url}, method={response.request.method}, "
                                           f"code={status_code}, message={json_data.get('message', 'None')}, response_body={json.dumps(json_data)})"))
                 if status_code == 10 or status_code == 22:
-                    self.logger.info(143, "Session expired, re-login required.")
-                    # avoid rate limit
-                    time.sleep(2)
-                    self._login()
+                    self.logger.info(143, "Session expired, refresh required.")
+                    if auto_refresh:
+                        # avoid rate limit
+                        time.sleep(2)
+                        self._refresh_session()
                 return False
             return True
         except Exception as e:
@@ -222,7 +227,7 @@ class Client:
             url=base_url + path,
             data=final_body,
             headers=self._get_request_headers(path, body, header),
-            data_verify=lambda r: self._data_verify(r, encrypt_body_type=encrypt_body_type),
+            data_verify=lambda r: self._data_verify(r, encrypt_body_type=encrypt_body_type, auto_refresh=kwargs.get("auto_refresh", True)),
         )
         if response is None:
             return None
@@ -273,6 +278,7 @@ class Client:
         
         with open(self.session_path, 'w', encoding='utf-8') as f:
             json.dump(session_data, f, ensure_ascii=False, indent=4)
+        self.session_last_modified = os.path.getmtime(self.session_path)
 
     def _update_serverlist(self):
         headers = {}
@@ -317,7 +323,7 @@ _config = X19Config.from_any(load_config_as_obj(str(_config_path)))
 
 def get_client(account_name: str, client_name: str, server_env: str, server_code: str = "x19", 
                 session: Session = None, logger: CustomLogger = None, force_relogin: bool = False) -> Client:
-    cache_key = f"{server_code}_{server_env}"
+    cache_key = f"{server_code}_{server_env}_{client_name}_{account_name}"
     if cache_key in _clients:
         return _clients[cache_key]
     
