@@ -1,9 +1,11 @@
 import requests
+import traceback
 
 from dataclasses import dataclass
 from typing import TypeVar, Generic, Type, Optional
 
 from . import BaseEntity
+from ..util import logger
 
 Entity = TypeVar("Entity")
 
@@ -30,4 +32,6 @@ class Response(BaseEntity, Generic[Entity]):
                     res.entities = [target_type.from_any(item) for item in res.entities]
             return res
         except Exception:
+            logger.error(90, f"Failed to parse response. Status code: {response.status_code}, Response content: {response.content}")
+            logger.error(90, f"Exception: {traceback.format_exc()}")
             return None
