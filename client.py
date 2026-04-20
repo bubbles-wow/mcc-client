@@ -89,7 +89,10 @@ class Client:
                     self._login()
 
     def _load_session(self):
-        if not os.path.exists(self.session_path) or os.path.getmtime(self.session_path) == self.session_last_modified:
+        if not os.path.exists(self.session_path):
+            self._update_serverlist()
+            return
+        elif os.path.getmtime(self.session_path) == self.session_last_modified:
             return
             
         try:
