@@ -76,17 +76,14 @@ class Client:
         del api_host_list
             
     def _refresh_session(self, force_relogin: bool = False):
-        if force_relogin:
-            self._login()
-        else:
-            tz = timezone(timedelta(hours=self.session_config.timezone))
-            self._load_session()
+        tz = timezone(timedelta(hours=self.session_config.timezone))
+        self._load_session()
 
-            if self.user_info is None or self.expires_at is None:
+        if force_relogin or self.user_info is None or self.expires_at is None:
+            self._login()
+        elif datetime.now(tz) >= self.expires_at:
+            if not self._check_login_result(auth.authentication_update(self)):
                 self._login()
-            elif datetime.now(tz) >= self.expires_at:
-                if not self._check_login_result(auth.authentication_update(self)):
-                    self._login()
 
     def _load_session(self):
         if not os.path.exists(self.session_path):
