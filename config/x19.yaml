@@ -40,19 +40,19 @@ session:
     udid: 
 
 client:
-  android_3.8:
+  android:
     type: "pe"
     config: 
-      engine_version: 3.8.0.291861
-      engine_hash: 7d6ccd52b3cc3b4f06e1fe7f6f376245
-      patch_version: 3.8.11.292609
-      patch_hash: 8456639b08dd05846f034c16f77d65a0
+      engine_version: 3.8.15.292795
+      engine_hash: 21a75a90bf5b7607d19bb3148f75da41
+      patch_version: 3.8.15.292795
+      patch_hash: 621a4634c3b2fcc066b681b138907aee
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 4
       sign_tr: 7
     sa_data: *sa_data_mumu_android
-  android:
+  android_3.7:
     type: "pe"
     config: 
       engine_version: 3.7.15.288131
@@ -77,6 +77,18 @@ client:
       sign_tr: 8
     sa_data: *sa_data_mumu_android
   pc_cocos:
+    type: "pe"
+    config:
+      engine_version: 3.8.15.292807
+      engine_hash: f879442b620c8e8540b7cadb0b425a7e
+      patch_version: 3.8.15.292807
+      patch_hash: 840798c7f965ce5d2556b4841cac9766
+      pay_channel: netease
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      sign_sp: 4
+      sign_tr: 7
+    sa_data: *sa_data_vm_win
+  pc_cocos_3.7:
     type: "pe"
     config:
       engine_version: 3.7.49.292449
