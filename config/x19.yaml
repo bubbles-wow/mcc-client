@@ -43,10 +43,10 @@ client:
   android:
     type: "pe"
     config: 
-      engine_version: 3.8.15.292795
-      engine_hash: 21a75a90bf5b7607d19bb3148f75da41
-      patch_version: 3.8.15.292795
-      patch_hash: 621a4634c3b2fcc066b681b138907aee
+      engine_version: 3.8.15.292836
+      engine_hash: c50629910b3d5a1a32a1b47fe7a94bfa
+      patch_version: 3.8.16.292818
+      patch_hash: a98ceb74d06bb923d0765b5924d27574
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 4
