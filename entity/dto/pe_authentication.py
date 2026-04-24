@@ -26,5 +26,9 @@ class PeAuthentication(BaseEntity):
         if isinstance(sa_data_obj, SaData) and sa_data_obj.os_name == "windows":
             del result["sauth_json"]["step"]
             del result["sauth_json"]["step2"]
+        else:
+            result["sauth_json"]["sdk_version"] = sa_data_obj.sdk_ver
+            result["sauth_json"]["platform"] = "ad"
+            result["sauth_json"]["source_platform"] = "ad"
         del sa_data_obj
         return result
