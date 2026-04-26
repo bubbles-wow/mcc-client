@@ -52,6 +52,7 @@ class Client:
         self.session_config = client_context.session_config
         self.session_last_modified = 0.0
         self.session_dir = self.session_config.path
+        self.session_refresh_time = 0
         
         session_fields = {
             "server_env": self.server.server_env,
@@ -164,7 +165,13 @@ class Client:
                     if auto_refresh:
                         # avoid rate limit
                         time.sleep(2)
-                        self._refresh_session()
+                        
+                        if (self.session_refresh_time > 3):
+                            self._login()
+                            self.session_refresh_time = 0
+                        else:
+                            self._refresh_session()
+                            self.session_refresh_time += 1
                 return False
             return True
         except Exception as e:
@@ -187,6 +194,7 @@ class Client:
         self.expires_at = datetime.now(tz) + timedelta(seconds=self.session_config.expired)
         self.user_info = new_user_info
         self._save_session()
+        self.session_refresh_time = 0
         self.logger.info(150, f"Login successful. (user_id={self.user_info.entity_id}, expires_at={self.expires_at.isoformat()})")
         
     def _check_login_result(self, response: X19Response[User]) -> bool:
@@ -218,7 +226,9 @@ class Client:
             header.setdefault("User-Agent", "libhttpclient/1.0.0.0")
         final_body = self._encrypt_body(body, encrypt_body_type=encrypt_body_type)
         self.logger.info(100, (f"Preparing request. (method={method}, url={base_url + path}, headers={header}, body={body.decode('utf-8', errors='replace')}, "
-                               f"final_body_base64={base64.b64encode(final_body).decode()}, encrypt_body_type={encrypt_body_type})"))
+                            #    f"final_body_base64={base64.b64encode(final_body).decode()}, encrypt_body_type={encrypt_body_type})"))
+                               f"encrypt_body_type={encrypt_body_type})"))
+        
             
         response = http.request(
             logger=self.logger,
