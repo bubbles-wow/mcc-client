@@ -45,8 +45,8 @@ client:
     config: 
       engine_version: 3.8.15.292836
       engine_hash: c50629910b3d5a1a32a1b47fe7a94bfa
-      patch_version: 3.8.16.292818
-      patch_hash: a98ceb74d06bb923d0765b5924d27574
+      patch_version: 3.8.17.293053
+      patch_hash: bb7f1b60be0354fbacdc9788514ca401
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 4
@@ -79,10 +79,10 @@ client:
   pc_cocos:
     type: "pe"
     config:
-      engine_version: 3.8.15.292807
-      engine_hash: f879442b620c8e8540b7cadb0b425a7e
-      patch_version: 3.8.15.292807
-      patch_hash: 840798c7f965ce5d2556b4841cac9766
+      engine_version: 3.8.20.293091
+      engine_hash: 98dc6587ca5d7ad3659651b4c48f8798
+      patch_version: 3.8.20.293091
+      patch_hash: 81a1c8f0a2ac1b1b6867be9783863ae1
       pay_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 4

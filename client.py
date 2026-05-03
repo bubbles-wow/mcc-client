@@ -64,8 +64,7 @@ class Client:
         self.session_path = os.path.join(self.session_dir, string.save_format(
             self.session_config.file_name, session_fields))
         
-        self._refresh_session(force_relogin=force_relogin)
-        
+        self._update_serverlist()
         api_host_list = [
             self.server.serverlist.api_gateway_url,
             self.server.serverlist.dc_web_url,
@@ -75,7 +74,8 @@ class Client:
             if 0 <= self.server.api_host_flag < len(api_host_list) \
             else self.server.serverlist.api_gateway_url
         del api_host_list
-            
+        self._refresh_session(force_relogin=force_relogin)
+        
     def _refresh_session(self, force_relogin: bool = False):
         tz = timezone(timedelta(hours=self.session_config.timezone))
         self._load_session()
@@ -172,6 +172,9 @@ class Client:
                         else:
                             self._refresh_session()
                             self.session_refresh_time += 1
+                        if not self.is_logined():
+                            self._login()
+                            self.session_refresh_time = 0
                 return False
             return True
         except Exception as e:
@@ -181,7 +184,7 @@ class Client:
         
     def _get_request_headers(self, path: str, body: bytes = b"", extra_headers: Dict[str, str] = None) -> Dict[str, str]:
         return {
-            "User-Agent": "WPFLauncher/0.0.0.0",
+            "User-Agent": "libhttpclient/1.0.0.0",
             "Content-Type": "application/json",
             "charset": "utf-8",
             "user-id": str(self.user_info.entity_id) if self.user_info else "",
@@ -208,8 +211,20 @@ class Client:
         return self.is_logined()
         
     def is_logined(self) -> bool:
-        tz = timezone(timedelta(hours=self.session_config.timezone))
-        return self.user_info is not None and self.expires_at is not None and datetime.now(tz) < self.expires_at
+        path = "/user-detail-extend"
+        body = r"{}".encode('utf-8')
+        final_body = self._encrypt_body(body, encrypt_body_type=0)
+        res = http.request(
+            logger=self.logger,
+            session=self.session,
+            method="POST",
+            url=self.api_host + path,
+            data=final_body,
+            headers=self._get_request_headers(path, body)
+        )
+        if res and X19Response.from_response(res).code == 0:
+            return True
+        return False
         
     def request(self, method: str, base_url: str, path: str, header: dict = None, body: bytes = b"", encrypt_body_type: int = 0, 
                            target_entity_type: Type[Entity] = None, **kwargs) -> X19Response | None:
@@ -218,18 +233,11 @@ class Client:
         if string.is_empty(base_url):
             self.logger.error(101, f"Base URL is empty for API request! (method={method}, path={path})")
             return None
-        if header is None:
-            header = {
-                "User-Agent": "libhttpclient/1.0.0.0"
-            }
-        else:
-            header.setdefault("User-Agent", "libhttpclient/1.0.0.0")
         final_body = self._encrypt_body(body, encrypt_body_type=encrypt_body_type)
         self.logger.info(100, (f"Preparing request. (method={method}, url={base_url + path}, headers={header}, body={body.decode('utf-8', errors='replace')}, "
                             #    f"final_body_base64={base64.b64encode(final_body).decode()}, encrypt_body_type={encrypt_body_type})"))
                                f"encrypt_body_type={encrypt_body_type})"))
         
-            
         response = http.request(
             logger=self.logger,
             session=self.session,
