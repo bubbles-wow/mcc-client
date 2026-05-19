@@ -211,7 +211,7 @@ class Client:
         return self.is_logined()
         
     def is_logined(self) -> bool:
-        path = "/user-detail-extend"
+        path = "/user-account-id"
         body = r"{}".encode('utf-8')
         final_body = self._encrypt_body(body, encrypt_body_type=0)
         res = http.request(
