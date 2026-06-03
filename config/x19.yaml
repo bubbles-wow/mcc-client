@@ -45,8 +45,8 @@ client:
     config: 
       engine_version: 3.8.25.293531
       engine_hash: 1e416a87fe5e361d9cc0c3e2388ef0b4
-      patch_version: 3.8.26.293570
-      patch_hash: 0a7a961d0d931f1b0f8be6a6d7f377dd
+      patch_version: 3.8.33.294249
+      patch_hash: ce6094c023857b1a5347b082a71e9619
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 4
@@ -79,10 +79,10 @@ client:
   pc_cocos:
     type: "pe"
     config:
-      engine_version: 3.8.23.293550
-      engine_hash: ad8e611fb9265da08f52d1f0e04b9650
-      patch_version: 3.8.24.293577
-      patch_hash: 10fc708bbb6d5f3fb5ca28ceabf4dd11
+      engine_version: 3.8.30.293959
+      engine_hash: 37317351c48c757662d024fa481cf464
+      patch_version: 3.8.33.294265
+      patch_hash: e71228bb3a34181d144ff6d1eeaca174
       pay_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 4
@@ -115,7 +115,7 @@ client:
   pc_java:
     type: "pc"
     config:
-      version: 1.15.18.46492
+      version: 1.15.22.54976
     sa_data: *sa_data_vm_win
 
 account:
