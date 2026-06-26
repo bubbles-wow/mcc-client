@@ -53,6 +53,9 @@ def pe_authentication(client: 'Client') -> Response[User] | None:
         client.client_config.patch_version + client.client_config.patch_hash + \
             client.client_config.sign_hash + seed
     client.sa_data.app_ver = client.client_config.patch_version
+    client.sauth.app_channel = client.client_config.app_channel
+    client.sauth.step = client.client_config.step
+    client.sauth.step2 = client.client_config.step2
     body = PeAuthentication(
         engine_version=client.client_config.engine_version,
         message=message,

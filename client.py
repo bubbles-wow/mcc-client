@@ -83,6 +83,7 @@ class Client:
         if force_relogin or self.user_info is None or self.expires_at is None:
             self._login()
         elif datetime.now(tz) >= self.expires_at:
+            self.logger.info(161, "Session expired, refresh required.")
             if not self._check_login_result(auth.authentication_update(self)):
                 self._login()
 
@@ -116,6 +117,7 @@ class Client:
                         self.server.serverlist = Serverlist.from_any(dyn["serverlist"])
                     
             self._update_serverlist()
+            self._save_session()
         except Exception as e:
             self.logger.error(130, f"Failed to load session from {self.session_path} (exception={e})")
             self.logger.error(130, traceback.format_exc())
@@ -321,8 +323,6 @@ class Client:
                 
                 self.server.etag = response.headers.get("ETag", "")
                 self.server.last_modified = response.headers.get("Last-Modified", "")
-                
-                self._save_session()
             else:
                 self.logger.warning(122, f"Failed to fetch serverlist! ({log_extra}, status_code={response.status_code})")
                 

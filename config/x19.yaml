@@ -45,10 +45,12 @@ client:
     config: 
       engine_version: 3.8.25.293531
       engine_hash: 1e416a87fe5e361d9cc0c3e2388ef0b4
-      patch_version: 3.8.33.294249
-      patch_hash: ce6094c023857b1a5347b082a71e9619
+      patch_version: 3.8.37.295303
+      patch_hash: 5545a47342b5556e2e236e5b44630bc7
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      step: 0
+      step2: 0
       sign_sp: 4
       sign_tr: 7
     sa_data: *sa_data_mumu_android
@@ -67,6 +69,21 @@ client:
   android_tech:
     type: "pe"
     config: 
+      engine_version: 3.9.500.295033
+      engine_hash: c2d6d84719175de02bba264c8acee37d
+      patch_version: 3.9.500.295033
+      patch_hash: 829a1b311bf0ed332a4c9d974c3b218c
+      pay_channel: dashen_cloudgame
+      app_channel: netease
+      step: -83861389
+      step2: 336829955
+      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      sign_sp: 3
+      sign_tr: 6
+    sa_data: *sa_data_mumu_android
+  android_tech_3.6:
+    type: "pe"
+    config: 
       engine_version: 3.200.100.279901
       engine_hash: 883e42b9df0bf93be5f5345fae6bcefa
       patch_version: 3.200.104.280674
@@ -79,10 +96,10 @@ client:
   pc_cocos:
     type: "pe"
     config:
-      engine_version: 3.8.30.293959
-      engine_hash: 37317351c48c757662d024fa481cf464
-      patch_version: 3.8.33.294265
-      patch_hash: e71228bb3a34181d144ff6d1eeaca174
+      engine_version: 3.8.39.295194
+      engine_hash: e4ec8fc70adf913985ad6167403703ed
+      patch_version: 3.8.40.295304
+      patch_hash: 4dd0cb34d8ef8f54b2637400934d6e8c
       pay_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 4
