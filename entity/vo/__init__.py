@@ -6,6 +6,8 @@ from .developer import Developer
 from .download_info import DownloadInfo
 from .encrypt_key import EncryptKey
 from .item import Item
+from .monthly_card_daily_reward import MonthlyCardDailyReward
+from .monthly_card_info import MonthlyCardInfo
 from .otp import Otp
 from .pe_item_detail import PeItemDetail
 from .pe_item import PeItem
