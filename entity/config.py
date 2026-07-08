@@ -41,6 +41,7 @@ class PeClientConfig(BaseEntity):
     sign_hash: str = "2b3e7ca013bb30a74d822579860c042b"
     step: str = None
     step2: str = None
+    tdid: str = None
     sign_sp: int = 3
     sign_tr: int = 9
     app_channel: str = "a50_sdk_cn"

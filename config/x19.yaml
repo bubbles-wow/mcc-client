@@ -51,6 +51,7 @@ client:
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       step: 0
       step2: 0
+      tdid: ''
       sign_sp: 3
       sign_tr: 6
     sa_data: *sa_data_mumu_android

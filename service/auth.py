@@ -1,9 +1,10 @@
 import uuid
+from copy import copy
 from typing import TYPE_CHECKING
 
 from mcc.entity.dto.login_otp import LoginOtp
 
-from ..entity import User, Response
+from ..entity import User, Response, Sauth
 from ..entity.dto import LoginOtp, Authentication, PeAuthentication
 from ..entity.vo import Otp
 from ..util import crypto, string
@@ -49,20 +50,28 @@ def pe_authentication(client: 'Client') -> Response[User] | None:
     client_config = client.client_config
     config = client.api_config.pe_authentication
     seed = str(uuid.uuid4())
-    message = client.client_config.engine_version + client.client_config.engine_hash + \
-        client.client_config.patch_version + client.client_config.patch_hash + \
-            client.client_config.sign_hash + seed
-    client.sa_data.app_ver = client.client_config.patch_version
-    client.sauth.app_channel = client.client_config.app_channel
-    client.sauth.step = client.client_config.step
-    client.sauth.step2 = client.client_config.step2
+    message = client_config.engine_version + client_config.engine_hash + \
+        client_config.patch_version + client_config.patch_hash + \
+            client_config.sign_hash + seed
+    client.sa_data.app_ver = client_config.patch_version
+    client.sauth.app_channel = client_config.app_channel
+    client.sauth.source_app_channel = client_config.app_channel
+    client.sauth.step = client_config.step
+    client.sauth.step2 = client_config.step2
+    client.sauth.tdid = client_config.tdid
+    final_sauth = client.sauth
+    if client_config.pay_channel == "netease":
+        final_sauth = copy(client.sauth)
+        for field_name in ("source_app_channel", "tdid"):
+            if hasattr(final_sauth, field_name):
+                delattr(final_sauth, field_name)
     body = PeAuthentication(
-        engine_version=client.client_config.engine_version,
+        engine_version=client_config.engine_version,
         message=message,
-        patch_version=client.client_config.patch_version,
-        pay_channel=client.client_config.pay_channel,
+        patch_version=client_config.patch_version,
+        pay_channel=client_config.pay_channel,
         sa_data=client.sa_data.to_json() + "\n",
-        sauth_json=client.sauth,
+        sauth_json=final_sauth,
         seed=seed,
         # sign=crypto.pe_auth_sign_v1(message)
         sign=crypto.pe_auth_sign_v2(message, client_config.sign_sp, client_config.sign_tr)

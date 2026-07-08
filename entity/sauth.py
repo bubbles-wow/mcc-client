@@ -21,7 +21,9 @@ class Sauth(BaseEntity):
     sdk_version: str = "4.16.0"
     sdkuid: Optional[str] = None
     sessionid: Optional[str] = None
+    source_app_channel: str = "a50_sdk_cn"
     source_platform: str = "pc"
     step: Optional[str] = None
     step2: Optional[str] = None
+    tdid: Optional[str] = None
     udid: Optional[str] = None
