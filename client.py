@@ -254,6 +254,20 @@ class Client:
         response._content = self._decrypt_body(response.content, encrypt_body_type=encrypt_body_type)
         return X19Response.from_response(response, target_type=target_entity_type)
     
+    def core_api_request(self, method: str, path: str, header: dict = None, body: bytes = b"", encrypt_body_type: int = 0, 
+                           target_entity_type: Type[Entity] = None, **kwargs) -> X19Response[Entity] | None:
+        self._refresh_session()
+        return self.request(
+            method=method,
+            base_url=self.server.serverlist.core_server_url,
+            path=path,
+            header=header,
+            body=body,
+            encrypt_body_type=encrypt_body_type,
+            target_entity_type=target_entity_type,
+            **kwargs
+        )
+    
     def api_request(self, method: str, path: str, header: dict = None, body: bytes = b"", encrypt_body_type: int = 0, 
                            target_entity_type: Type[Entity] = None, **kwargs) -> X19Response[Entity] | None:
         self._refresh_session()

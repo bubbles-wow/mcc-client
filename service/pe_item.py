@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from ..entity import Response
 from ..entity.dto import (
@@ -14,7 +14,7 @@ from ..entity.vo import (
 if TYPE_CHECKING:
     from ..client import Client
 
-def search_by_id_list(client: 'Client', item_ids: List[str]) -> Response[PeItem]:
+def search_by_id_list(client: 'Client', item_ids: list[str]) -> Response[PeItem]:
     body = SearchByIdList(item_id_list=item_ids)
     return client.api_request(
         "POST",
@@ -32,8 +32,8 @@ def search_season_mods(client: 'Client', length: int = 20, offset: int = 0) -> R
         target_entity_type=PeItem
     )
 
-def default_sort_water_fall(client: 'Client', item_ids: List[str] = [], first_type: int = 2, mod_second_type: int = 0, 
-                            price_type: int = 0, play_label_list: List[int] = [], theme_label_list: List[int] = []) -> Response[WaterFall]:
+def default_sort_water_fall(client: 'Client', item_ids: list[str] = [], first_type: int = 2, mod_second_type: int = 0, 
+                            price_type: int = 0, play_label_list: list[int] = [], theme_label_list: list[int] = []) -> Response[WaterFall]:
     """
     /pe-item/default-sort-water-fall
     
@@ -60,7 +60,7 @@ def default_sort_water_fall(client: 'Client', item_ids: List[str] = [], first_ty
         target_entity_type=WaterFall
     )
 
-def water_fall(client: 'Client', item_ids: List[str] = [], include_oversea_item: int = 0) -> Response[WaterFall]:
+def water_fall(client: 'Client', item_ids: list[str] = [], include_oversea_item: int = 0) -> Response[WaterFall]:
     body = PeItemWaterFall(
         item_ids=item_ids,
         include_oversea_item=include_oversea_item
@@ -215,7 +215,7 @@ def get_download_info(client: 'Client', item_id: str) -> Response[DownloadInfo]:
         target_entity_type=DownloadInfo
     )
 
-def get_encryption_key_list(client: 'Client', item_ids: List[str], device_id: str = "123456") -> Response[EncryptKey]:
+def get_encryption_key_list(client: 'Client', item_ids: list[str], device_id: str = "123456") -> Response[EncryptKey]:
     """
     /pe-item/get-encryption-key-list
     
@@ -227,6 +227,23 @@ def get_encryption_key_list(client: 'Client', item_ids: List[str], device_id: st
     return client.api_request(
         "POST",
         "/pe-item/get-encryption-key-list",
+        body=body.to_json().encode(),
+        encrypt_body_type=2,
+        target_entity_type=EncryptKey
+    )
+    
+def get_encryption_key_list_for_guests(client: 'Client', item_ids: list[str], device_id: str = "123456") -> Response[EncryptKey]:
+    """
+    /pe-item/get-encryption-key-list-for-guests
+    
+    Attributes:
+        device_id: str, default "123456"
+        item_ids: list[str], list of item_id to get encrypt key
+    """
+    body = GetEncryptKeyList(item_ids=item_ids, device_id=device_id)
+    return client.core_api_request(
+        "POST",
+        "/pe-item/get-encryption-key-list-for-guests",
         body=body.to_json().encode(),
         encrypt_body_type=2,
         target_entity_type=EncryptKey
