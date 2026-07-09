@@ -48,6 +48,7 @@ client:
       patch_version: 3.9.1.296330
       patch_hash: 3c36cacd58f0baa560f8a023e468e837
       pay_channel: dashen_cloudgame
+      app_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       step: 0
       step2: 0

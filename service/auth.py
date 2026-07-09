@@ -54,17 +54,17 @@ def pe_authentication(client: 'Client') -> Response[User] | None:
         client_config.patch_version + client_config.patch_hash + \
             client_config.sign_hash + seed
     client.sa_data.app_ver = client_config.patch_version
-    client.sauth.app_channel = client_config.app_channel
-    client.sauth.source_app_channel = client_config.app_channel
     client.sauth.step = client_config.step
     client.sauth.step2 = client_config.step2
     client.sauth.tdid = client_config.tdid
-    final_sauth = client.sauth
-    if client_config.pay_channel == "netease":
-        final_sauth = copy(client.sauth)
-        for field_name in ("source_app_channel", "tdid"):
-            if hasattr(final_sauth, field_name):
-                delattr(final_sauth, field_name)
+    final_sauth = copy(client.sauth)
+    if client_config.tdid is None:
+        delattr(final_sauth, "tdid")
+    if client_config.app_channel is None:
+        delattr(final_sauth, "source_app_channel")
+    else:
+        final_sauth.app_channel = client_config.app_channel
+        final_sauth.source_app_channel = client_config.app_channel
     body = PeAuthentication(
         engine_version=client_config.engine_version,
         message=message,

@@ -44,7 +44,7 @@ class PeClientConfig(BaseEntity):
     tdid: str = None
     sign_sp: int = 3
     sign_tr: int = 9
-    app_channel: str = "a50_sdk_cn"
+    app_channel: str = None
     pay_channel: str = "netease"
 
 @dataclass
