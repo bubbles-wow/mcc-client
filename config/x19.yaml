@@ -61,8 +61,8 @@ client:
     config: 
       engine_version: 3.8.25.293531
       engine_hash: 1e416a87fe5e361d9cc0c3e2388ef0b4
-      patch_version: 3.8.37.295303
-      patch_hash: 5545a47342b5556e2e236e5b44630bc7
+      patch_version: 3.8.41.296398
+      patch_hash: ef96df71f1c99d7c93d8d388d67771a8
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       step: 0

@@ -53,25 +53,13 @@ def pe_authentication(client: 'Client') -> Response[User] | None:
     message = client_config.engine_version + client_config.engine_hash + \
         client_config.patch_version + client_config.patch_hash + \
             client_config.sign_hash + seed
-    client.sa_data.app_ver = client_config.patch_version
-    client.sauth.step = client_config.step
-    client.sauth.step2 = client_config.step2
-    client.sauth.tdid = client_config.tdid
-    final_sauth = copy(client.sauth)
-    if client_config.tdid is None:
-        delattr(final_sauth, "tdid")
-    if client_config.app_channel is None:
-        delattr(final_sauth, "source_app_channel")
-    else:
-        final_sauth.app_channel = client_config.app_channel
-        final_sauth.source_app_channel = client_config.app_channel
     body = PeAuthentication(
         engine_version=client_config.engine_version,
         message=message,
         patch_version=client_config.patch_version,
         pay_channel=client_config.pay_channel,
         sa_data=client.sa_data.to_json() + "\n",
-        sauth_json=final_sauth,
+        sauth_json=client.sauth,
         seed=seed,
         # sign=crypto.pe_auth_sign_v1(message)
         sign=crypto.pe_auth_sign_v2(message, client_config.sign_sp, client_config.sign_tr)

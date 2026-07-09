@@ -45,6 +45,7 @@ class Client:
         self.sauth = client_context.account_config
         
         self.client_config = client_context.client_config.config
+        self._init_client_config()
         
         self.user_info: Optional[User] = None
         self.expires_at: Optional[datetime] = None
@@ -75,6 +76,26 @@ class Client:
             else self.server.serverlist.api_gateway_url
         del api_host_list
         self._refresh_session(force_relogin=force_relogin)
+        
+    def _init_client_config(self): 
+        self.sa_data.app_ver = self.client_config.patch_version
+        if self.sa_data.os_name == "android":
+            self.sauth.platform = "ad"
+            self.sauth.source_platform = "ad"
+        self.sauth.sdk_version = self.sa_data.sdk_ver
+        self.sauth.step = self.client_config.step
+        self.sauth.step2 = self.client_config.step2
+        self.sauth.tdid = self.client_config.tdid
+        if self.client_config.tdid is None:
+            delattr(self.sauth, "tdid")
+        if self.client_config.app_channel is None:
+            delattr(self.sauth, "source_app_channel")
+        else:
+            self.sauth.app_channel = self.client_config.app_channel
+            self.sauth.source_app_channel = self.client_config.app_channel
+        if self.sauth.platform == "pc":
+            delattr(self.sauth, "step")
+            delattr(self.sauth, "step2")
         
     def _refresh_session(self, force_relogin: bool = False):
         tz = timezone(timedelta(hours=self.session_config.timezone))
