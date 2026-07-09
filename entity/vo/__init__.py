@@ -10,6 +10,7 @@ from .monthly_card_daily_reward import MonthlyCardDailyReward
 from .monthly_card_info import MonthlyCardInfo
 from .otp import Otp
 from .pe_item_detail import PeItemDetail
+from .pe_item_lobby_info import PeItemLobbyInfo
 from .pe_item import PeItem
 from .pe_purchase_item_order import PePurchaseItemOrder
 from .purchase_result import PurchaseResult

@@ -8,7 +8,7 @@ from ..entity.dto import (
 )
 from ..entity.vo import (
     PeItem, WaterFall, PeItemDetail, DownloadInfo, EncryptKey, 
-    BuyItemResult, PePurchaseItemOrder, PurchaseResult
+    BuyItemResult, PePurchaseItemOrder, PurchaseResult, PeItemLobbyInfo
 )
 
 if TYPE_CHECKING:
@@ -21,6 +21,15 @@ def search_by_id_list(client: 'Client', item_ids: list[str]) -> Response[PeItem]
         "/pe-item/query/search-by-id-list",
         body=body.to_json().encode(),
         target_entity_type=PeItem
+    )
+    
+def search_lobby_by_id_list(client: 'Client', item_ids: list[str]) -> Response[PeItemLobbyInfo]:
+    body = SearchByIdList(item_id_list=item_ids)
+    return client.api_request(
+        "POST",
+        "/pe-item/query/search-lobby-by-id-list",
+        body=body.to_json().encode(),
+        target_entity_type=PeItemLobbyInfo
     )
 
 def search_season_mods(client: 'Client', length: int = 20, offset: int = 0) -> Response[PeItem]:
