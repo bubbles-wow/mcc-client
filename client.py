@@ -45,7 +45,8 @@ class Client:
         self.sauth = client_context.account_config
         
         self.client_config = client_context.client_config.config
-        self._init_client_config()
+        if client_context.client_config.type == "pe":
+            self._init_pe_client_config()
         
         self.user_info: Optional[User] = None
         self.expires_at: Optional[datetime] = None
@@ -77,7 +78,7 @@ class Client:
         del api_host_list
         self._refresh_session(force_relogin=force_relogin)
         
-    def _init_client_config(self): 
+    def _init_pe_client_config(self): 
         self.sa_data.app_ver = self.client_config.patch_version
         if self.sa_data.os_name == "android":
             self.sauth.platform = "ad"
