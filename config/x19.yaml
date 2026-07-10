@@ -43,10 +43,10 @@ client:
   android:
     type: "pe"
     config: 
-      engine_version: 3.9.0.296320
-      engine_hash: b27cee4b6da3512335fd042743d30a78
-      patch_version: 3.9.1.296330
-      patch_hash: 3c36cacd58f0baa560f8a023e468e837
+      engine_version: 3.9.0.296551
+      engine_hash: c59a9e07deea7e54b9a1e98baaf2cd8d
+      patch_version: 3.9.1.296558
+      patch_hash: 785b29ab71a8d7009d745eddf05ec36c
       pay_channel: dashen_cloudgame
       app_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
@@ -79,6 +79,8 @@ client:
       patch_hash: 8bedb34c0b641d76e5d0f1ed055f42a6
       pay_channel: dashen_cloudgame
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      step: 0
+      step2: 0
       sign_sp: 3
       sign_tr: 9
     sa_data: *sa_data_mumu_android
@@ -148,7 +150,7 @@ client:
   pc_java:
     type: "pc"
     config:
-      version: 1.15.22.54976
+      version: 1.15.23.492
     sa_data: *sa_data_vm_win
 
 account:
