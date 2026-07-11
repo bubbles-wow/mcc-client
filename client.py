@@ -87,6 +87,15 @@ class Client:
         self.sauth.step = self.client_config.step
         self.sauth.step2 = self.client_config.step2
         self.sauth.tdid = self.client_config.tdid
+        self.sauth.udid = self.sa_data.udid
+        
+        # for email account login on android client
+        if self.sauth.sessionid is not None:
+            session_base64 = self.sauth.sessionid[2:]
+            session = json.loads(base64.b64decode(session_base64).decode('utf-8'))
+            if session.get("t") == 1:
+                self.sauth.step = "695616851"
+        # old version dont have these field
         if self.client_config.tdid is None:
             delattr(self.sauth, "tdid")
         if self.client_config.app_channel is None:
@@ -94,6 +103,7 @@ class Client:
         else:
             self.sauth.app_channel = self.client_config.app_channel
             self.sauth.source_app_channel = self.client_config.app_channel
+        # pc_cocos client dont have these field
         if self.sauth.platform == "pc":
             delattr(self.sauth, "step")
             delattr(self.sauth, "step2")

@@ -43,10 +43,10 @@ client:
   android:
     type: "pe"
     config: 
-      engine_version: 3.9.0.296551
-      engine_hash: c59a9e07deea7e54b9a1e98baaf2cd8d
-      patch_version: 3.9.1.296558
-      patch_hash: 785b29ab71a8d7009d745eddf05ec36c
+      engine_version: 3.9.0.296599
+      engine_hash: ab180d3f154e83d370367f026585a0c1
+      patch_version: 3.9.2.296602
+      patch_hash: 0948db88b5d545e456cb4fcb348315b2
       pay_channel: dashen_cloudgame
       app_channel: netease
       # sign_hash: 2b3e7ca013bb30a74d822579860c042b
@@ -161,7 +161,6 @@ account:
     ip: 
     sdkuid: 
     sessionid: 
-    udid: 
 
 server:
   x19:
