@@ -194,8 +194,8 @@ def get_detail_v2(client: 'Client', item_id: str) -> Response[PeItemDetail]:
         target_entity_type=PeItemDetail
     )
 
-def load_items_by_developer_info_id(client: 'Client', developer_info_id: int, length: int = 12, 
-                                    offset: int = 0) -> Response[PeItem]:
+def load_items_by_developer_info_id(client: 'Client', developer_info_id: int, first_type: int = None, sort_type: int = None, 
+                                    length: int = 12, offset: int = 0) -> Response[PeItem]:
     """
     /pe-developer-homepage/load_items_by_developer_info_id
     
@@ -205,6 +205,8 @@ def load_items_by_developer_info_id(client: 'Client', developer_info_id: int, le
     """
     body = LoadItemsByDeveloperId(
         developer_info_id=developer_info_id,
+        first_type=first_type,
+        sort_type=sort_type,
         length=length,
         offset=offset
     )
