@@ -96,6 +96,8 @@ class Client:
             if session.get("t") == 1:
                 self.sauth.step = "695616851"
         # old version dont have these field
+        if self.client_config.gas_token is None:
+            delattr(self.sauth, "gas_token")
         if self.client_config.tdid is None:
             delattr(self.sauth, "tdid")
         if self.client_config.app_channel is None:

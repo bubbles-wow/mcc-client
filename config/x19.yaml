@@ -43,16 +43,14 @@ client:
   android:
     type: "pe"
     config: 
-      engine_version: 3.9.5.297103
-      engine_hash: 18673c83b014387de63b3167bb5fe29c
-      patch_version: 3.9.7.297077
-      patch_hash: 4474072dd1ba83e84eedfd831994c05f
+      engine_version: 3.9.15.297706
+      engine_hash: 782a33ef4f45114e79dc6d7b905aec2e
+      patch_version: 3.9.17.297750
+      patch_hash: bf26ff4a3d5982521d151a5f5ad89373
       pay_channel: dashen_cloudgame
       app_channel: netease
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       step: 0
       step2: 0
-      tdid: ''
       sign_sp: 3
       sign_tr: 6
     sa_data: *sa_data_mumu_android
@@ -64,7 +62,6 @@ client:
       patch_version: 3.8.41.296398
       patch_hash: ef96df71f1c99d7c93d8d388d67771a8
       pay_channel: dashen_cloudgame
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       step: 0
       step2: 0
       sign_sp: 4
@@ -75,10 +72,9 @@ client:
     config: 
       engine_version: 3.7.15.288131
       engine_hash: 0fb7b528b222a7a44a10b08e994c786e
-      patch_version: 3.7.42.291632
-      patch_hash: 8bedb34c0b641d76e5d0f1ed055f42a6
+      patch_version: 3.7.46.293055
+      patch_hash: 681707ba0c015040a5c69768eeccff7c
       pay_channel: dashen_cloudgame
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       step: 0
       step2: 0
       sign_sp: 3
@@ -95,7 +91,6 @@ client:
       app_channel: netease
       step: -83861389
       step2: 336829955
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 3
       sign_tr: 6
     sa_data: *sa_data_mumu_android
@@ -107,11 +102,22 @@ client:
       patch_version: 3.200.104.280674
       patch_hash: f000ab0922db96f0ce87d49ea0a74c83
       pay_channel: dashen_cloudgame
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
       sign_sp: 1
       sign_tr: 8
     sa_data: *sa_data_mumu_android
   pc_cocos:
+    type: "pe"
+    config:
+      engine_version: 3.9.12.297550
+      engine_hash: 066d2e0342cd3f9515904729a2b2bd2f
+      patch_version: 3.9.15.297752
+      patch_hash: 3f59a3d50849149839be8c90cd3c83df
+      pay_channel: netease
+      gas_token: ''
+      sign_sp: 3
+      sign_tr: 6
+    sa_data: *sa_data_vm_win
+  pc_cocos_3.8:
     type: "pe"
     config:
       engine_version: 3.8.43.296051
@@ -119,7 +125,7 @@ client:
       patch_version: 3.8.44.296250
       patch_hash: a39e7f98b9c673b52f74e5c24c8aa590
       pay_channel: netease
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      gas_token: ''
       sign_sp: 4
       sign_tr: 7
     sa_data: *sa_data_vm_win
@@ -131,7 +137,7 @@ client:
       patch_version: 3.7.50.292585
       patch_hash: ad57d438f6f6210a79e09015389702dc
       pay_channel: netease
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      gas_token: ''
       sign_sp: 3
       sign_tr: 9
     sa_data: *sa_data_vm_win
@@ -143,14 +149,14 @@ client:
       patch_version: 3.5.100.279203
       patch_hash: d41d8cd98f00b204e9800998ecf8427e
       pay_channel: netease
-      # sign_hash: 2b3e7ca013bb30a74d822579860c042b
+      gas_token: ''
       sign_sp: 1
       sign_tr: 8
     sa_data: *sa_data_vm_win
   pc_java:
     type: "pc"
     config:
-      version: 1.15.23.492
+      version: 1.15.25.5792
     sa_data: *sa_data_vm_win
 
 account:
