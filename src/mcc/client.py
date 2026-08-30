@@ -43,6 +43,8 @@ class Client:
         self.sa_data = copy.deepcopy(client_context.client_config.sa_data)
         self.sauth = copy.deepcopy(client_context.account_config)
         
+        self.client_name = client_context.client_name
+        self.account_name = client_context.account_name
         self.client_config = client_context.client_config.config
         if client_context.client_config.type == "pe":
             self._init_pe_client_config()
@@ -235,12 +237,12 @@ class Client:
         self.user_info = new_user_info
         self._save_session()
         self.session_refresh_time = 0
-        self.logger.info(150, f"Login successful. (user_id={self.user_info.entity_id}, expires_at={self.expires_at.isoformat()})")
+        self.logger.info(150, f"Login successful. (server_env={self.server.server_env}, server_code={self.server.server_code}, client_name={self.client_name}, account_name={self.account_name}, user_id={self.user_info.entity_id}, expires_at={self.expires_at.isoformat()})")
         
     def _check_login_result(self, response: X19Response[User]) -> bool:
         if response is None or response.entity is None:
             if not self.is_logined():
-                self.logger.error(151, "Login failed: No user info in response.")
+                self.logger.error(151, f"Login failed: No user info in response. (server_env={self.server.server_env}, server_code={self.server.server_code}, client_name={self.client_name}, account_name={self.account_name})")
                 return False
             else:
                 return True
