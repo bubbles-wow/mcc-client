@@ -1,7 +1,8 @@
-import base64
 import os
+import copy
 import json
 import time
+import base64
 import traceback
 
 from pathlib import Path
@@ -19,8 +20,6 @@ from .entity import (
 )
 from .service import auth
 from .util import crypto, string
-
-client_base_path = Path(__file__).parent
 
 @dataclass
 class ClientContext:
@@ -41,9 +40,11 @@ class Client:
         self.server = client_context.server
         self.api_config = client_context.api_config
         
-        self.sa_data = client_context.client_config.sa_data
-        self.sauth = client_context.account_config
+        self.sa_data = copy.deepcopy(client_context.client_config.sa_data)
+        self.sauth = copy.deepcopy(client_context.account_config)
         
+        self.client_name = client_context.client_name
+        self.account_name = client_context.account_name
         self.client_config = client_context.client_config.config
         if client_context.client_config.type == "pe":
             self._init_pe_client_config()
@@ -53,7 +54,9 @@ class Client:
         
         self.session_config = client_context.session_config
         self.session_last_modified = 0.0
-        self.session_dir = self.session_config.path
+        self.session_dir = Path(self.session_config.path)
+        if not self.session_dir.exists():
+            self.session_dir.mkdir(parents=True, exist_ok=True)
         self.session_refresh_time = 0
         
         session_fields = {
@@ -63,8 +66,8 @@ class Client:
             "account_name": client_context.account_name
         }
         
-        self.session_path = os.path.join(self.session_dir, string.save_format(
-            self.session_config.file_name, session_fields))
+        self.session_path = self.session_dir / string.save_format(
+            self.session_config.file_name, session_fields)
         
         self._update_serverlist()
         api_host_list = [
@@ -234,12 +237,12 @@ class Client:
         self.user_info = new_user_info
         self._save_session()
         self.session_refresh_time = 0
-        self.logger.info(150, f"Login successful. (user_id={self.user_info.entity_id}, expires_at={self.expires_at.isoformat()})")
+        self.logger.info(150, f"Login successful. (server_env={self.server.server_env}, server_code={self.server.server_code}, client_name={self.client_name}, account_name={self.account_name}, user_id={self.user_info.entity_id}, expires_at={self.expires_at.isoformat()})")
         
     def _check_login_result(self, response: X19Response[User]) -> bool:
         if response is None or response.entity is None:
             if not self.is_logined():
-                self.logger.error(151, "Login failed: No user info in response.")
+                self.logger.error(151, f"Login failed: No user info in response. (server_env={self.server.server_env}, server_code={self.server.server_code}, client_name={self.client_name}, account_name={self.account_name})")
                 return False
             else:
                 return True
@@ -332,8 +335,6 @@ class Client:
             self.logger.error(110, f"Unsupported server type for login: {self.server.server_code}")
 
     def _save_session(self):
-        os.makedirs(self.session_dir, exist_ok=True)
-        
         session_data = {
             "expires_at": self.expires_at.isoformat() if self.expires_at else None,
             "user_info": self.user_info.to_dict() if self.user_info else None,
@@ -379,10 +380,11 @@ class Client:
             self.logger.error(123, traceback.format_exc())
 
 # initialize ClientManager
+PROJECT_ROOT = Path(os.environ.get("PROJECT_ROOT") or Path.cwd())
 if os.getenv("DEBUG", "False").lower() == "true":
-    _config_path = client_base_path / "config" / "test_x19.yaml"
+    _config_path = PROJECT_ROOT / "config" / "test_x19.yaml"
 else:
-    _config_path = client_base_path / "config" / "x19.yaml"
+    _config_path = PROJECT_ROOT / "config" / "x19.yaml"
 
 _clients: Dict[str, Client] = {}
 _config = X19Config.from_any(load_config_as_obj(str(_config_path)))
