@@ -1,6 +1,6 @@
 [project]
 name = "mcc-client"
-version = "0.1.1"
+version = "0.1.2"
 description = "simple implement of mcbe china launcher"
 readme = "README.md"
 authors = [
@@ -8,7 +8,7 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
-    "common-py>=0.1.1",
+    "common-py>=0.1.2",
     "pycryptodome>=3.23.0",
     "requests>=2.32.5",
 ]
