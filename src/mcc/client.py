@@ -52,7 +52,9 @@ class Client:
         
         self.session_config = client_context.session_config
         self.session_last_modified = 0.0
-        self.session_dir = self.session_config.path
+        self.session_dir = Path(self.session_config.path)
+        if not self.session_dir.exists():
+            self.session_dir.mkdir(parents=True, exist_ok=True)
         self.session_refresh_time = 0
         
         session_fields = {
@@ -62,8 +64,8 @@ class Client:
             "account_name": client_context.account_name
         }
         
-        self.session_path = os.path.join(self.session_dir, string.save_format(
-            self.session_config.file_name, session_fields))
+        self.session_path = self.session_dir / string.save_format(
+            self.session_config.file_name, session_fields)
         
         self._update_serverlist()
         api_host_list = [
@@ -331,8 +333,6 @@ class Client:
             self.logger.error(110, f"Unsupported server type for login: {self.server.server_code}")
 
     def _save_session(self):
-        os.makedirs(self.session_dir, exist_ok=True)
-        
         session_data = {
             "expires_at": self.expires_at.isoformat() if self.expires_at else None,
             "user_info": self.user_info.to_dict() if self.user_info else None,
