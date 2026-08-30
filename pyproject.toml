@@ -1,13 +1,17 @@
 [project]
 name = "mcc-client"
-version = "0.1.0"
+version = "0.1.1"
 description = "simple implement of mcbe china launcher"
 readme = "README.md"
 authors = [
     { name = "bubbles_wow", email = "bubbles_wow@outlook.com" }
 ]
 requires-python = ">=3.14"
-dependencies = ["common-py"]
+dependencies = [
+    "common-py>=0.1.1",
+    "pycryptodome>=3.23.0",
+    "requests>=2.32.5",
+]
 
 [build-system]
 requires = ["uv_build>=0.12.7,<0.13.0"]

@@ -1,7 +1,8 @@
-import base64
 import os
+import copy
 import json
 import time
+import base64
 import traceback
 
 from pathlib import Path
@@ -19,8 +20,6 @@ from .entity import (
 )
 from .service import auth
 from .util import crypto, string
-
-client_base_path = Path(__file__).parent
 
 @dataclass
 class ClientContext:
@@ -41,8 +40,8 @@ class Client:
         self.server = client_context.server
         self.api_config = client_context.api_config
         
-        self.sa_data = client_context.client_config.sa_data
-        self.sauth = client_context.account_config
+        self.sa_data = copy.deepcopy(client_context.client_config.sa_data)
+        self.sauth = copy.deepcopy(client_context.account_config)
         
         self.client_config = client_context.client_config.config
         if client_context.client_config.type == "pe":
@@ -379,10 +378,11 @@ class Client:
             self.logger.error(123, traceback.format_exc())
 
 # initialize ClientManager
+PROJECT_ROOT = Path(os.environ.get("PROJECT_ROOT") or Path.cwd())
 if os.getenv("DEBUG", "False").lower() == "true":
-    _config_path = client_base_path / "config" / "test_x19.yaml"
+    _config_path = PROJECT_ROOT / "config" / "test_x19.yaml"
 else:
-    _config_path = client_base_path / "config" / "x19.yaml"
+    _config_path = PROJECT_ROOT / "config" / "x19.yaml"
 
 _clients: Dict[str, Client] = {}
 _config = X19Config.from_any(load_config_as_obj(str(_config_path)))
