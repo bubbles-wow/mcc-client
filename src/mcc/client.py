@@ -387,10 +387,10 @@ else:
     _config_path = PROJECT_ROOT / "config" / "x19.yaml"
 
 _clients: Dict[str, Client] = {}
-_config = X19Config.from_any(load_config_as_obj(str(_config_path)))
 
 def get_client(account_name: str, client_name: str, server_env: str, server_code: str = "x19", 
                 session: Session = None, logger: CustomLogger = None, force_relogin: bool = False) -> Client:
+    _config = X19Config.from_any(load_config_as_obj(str(_config_path)))
     cache_key = f"{server_code}_{server_env}_{client_name}_{account_name}"
     if cache_key in _clients:
         return _clients[cache_key]

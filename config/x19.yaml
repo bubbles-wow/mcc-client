@@ -45,8 +45,8 @@ client:
     config: 
       engine_version: 3.9.15.297907
       engine_hash: 260a8b0499822c3f4fb4e35e8051afab
-      patch_version: 3.9.25.298530
-      patch_hash: 3252f084fc1d1e2fb1cae9c7a3f99e6b
+      patch_version: 3.9.33.299190
+      patch_hash: ff7fd5549d6668d9f30400081fd1b076
       pay_channel: dashen_cloudgame
       app_channel: netease
       step: 0
@@ -108,10 +108,10 @@ client:
   pc_cocos:
     type: "pe"
     config:
-      engine_version: 3.9.24.298408
-      engine_hash: 34f5c9a26fa22d282559152764d13746
-      patch_version: 3.9.26.298531
-      patch_hash: 2355687628b6b83d6711ad220d306bd4
+      engine_version: 3.9.35.299119
+      engine_hash: c9720c8ea466541aaf932d35c455e84b
+      patch_version: 3.9.36.299191
+      patch_hash: 53b3171cc14de99e5f5bc81161c08362
       pay_channel: netease
       gas_token: ''
       sign_sp: 3
