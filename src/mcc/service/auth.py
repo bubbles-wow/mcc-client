@@ -2,8 +2,6 @@ import uuid
 from copy import copy
 from typing import TYPE_CHECKING
 
-from mcc.entity.dto.login_otp import LoginOtp
-
 from ..entity import User, Response, Sauth
 from ..entity.dto import LoginOtp, Authentication, PeAuthentication
 from ..entity.vo import Otp
@@ -71,7 +69,8 @@ def pe_authentication(client: 'Client') -> Response[User] | None:
         path=config.path if config.path else "/pe-authentication",
         body=body.to_json().encode(),
         encrypt_body_type=config.encrypt_body_type,
-        target_entity_type=User
+        target_entity_type=User,
+        add_user_header=False
     )
 
 def authentication_update(client: 'Client') -> Response[User] | None:

@@ -47,6 +47,7 @@ class PeClientConfig(BaseEntity):
     sign_tr: int = 9
     app_channel: str = None
     pay_channel: str = "netease"
+    sdk_version: str = "4.16.0"
 
 @dataclass
 class PcClientConfig(BaseEntity):

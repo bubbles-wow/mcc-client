@@ -69,7 +69,7 @@ class Client:
         self.session_path = self.session_dir / string.save_format(
             self.session_config.file_name, session_fields)
         
-        self._update_serverlist()
+        self._update_serverlist(save_session=False)
         api_host_list = [
             self.server.serverlist.api_gateway_url,
             self.server.serverlist.dc_web_url,
@@ -83,10 +83,14 @@ class Client:
         
     def _init_pe_client_config(self): 
         self.sa_data.app_ver = self.client_config.patch_version
+        self.sauth.gas_token = self.client_config.gas_token
         if self.sa_data.os_name == "android":
             self.sauth.platform = "ad"
             self.sauth.source_platform = "ad"
-        self.sauth.sdk_version = self.sa_data.sdk_ver
+            if self.client_config.gas_token is None:
+                delattr(self.sauth, "gas_token")
+        self.sa_data.sdk_ver = self.client_config.sdk_version
+        self.sauth.sdk_version = self.client_config.sdk_version
         self.sauth.step = self.client_config.step
         self.sauth.step2 = self.client_config.step2
         self.sauth.tdid = self.client_config.tdid
@@ -97,12 +101,11 @@ class Client:
             session_base64 = self.sauth.sessionid[2:]
             session = json.loads(base64.b64decode(session_base64).decode('utf-8'))
             if session.get("t") == 1:
-                self.sauth.step = "695616851"
-        # old version dont have these field
-        if self.client_config.gas_token is None:
-            delattr(self.sauth, "gas_token")
-        if self.client_config.tdid is None:
-            delattr(self.sauth, "tdid")
+                self.client_config.tdid = ""
+                self.sauth.tdid = ""
+            else:
+                if self.sauth.tdid is None:
+                    delattr(self.sauth, "tdid")
         if self.client_config.app_channel is None:
             delattr(self.sauth, "source_app_channel")
         else:
@@ -110,6 +113,7 @@ class Client:
             self.sauth.source_app_channel = self.client_config.app_channel
         # pc_cocos client dont have these field
         if self.sauth.platform == "pc":
+            delattr(self.sauth, "tdid")
             delattr(self.sauth, "step")
             delattr(self.sauth, "step2")
         
@@ -154,7 +158,6 @@ class Client:
                         self.server.serverlist = Serverlist.from_any(dyn["serverlist"])
                     
             self._update_serverlist()
-            self._save_session()
         except Exception as e:
             self.logger.error(130, f"Failed to load session from {self.session_path} (exception={e})")
             self.logger.error(130, traceback.format_exc())
@@ -221,13 +224,17 @@ class Client:
             self.logger.error(142, traceback.format_exc())
             return False
         
-    def _get_request_headers(self, path: str, body: bytes = b"", extra_headers: Dict[str, str] = None) -> Dict[str, str]:
+    def _get_request_headers(self, path: str, body: bytes = b"", extra_headers: Dict[str, str] = None, user_info: bool = True) -> Dict[str, str]:
+        if user_info:
+            extra_headers = {
+                "user-id": str(self.user_info.entity_id) if self.user_info else "",
+                "user-token": crypto.compute_dynamic_token(path, body, self.user_info.token) if self.user_info else "",
+                **(extra_headers or {})
+            }
         return {
             "User-Agent": "libhttpclient/1.0.0.0",
             "Content-Type": "application/json",
             "charset": "utf-8",
-            "user-id": str(self.user_info.entity_id) if self.user_info else "",
-            "user-token": crypto.compute_dynamic_token(path, body, self.user_info.token) if self.user_info else "",
             **(extra_headers or {})
         }
 
@@ -266,7 +273,7 @@ class Client:
         return False
         
     def request(self, method: str, base_url: str, path: str, header: dict = None, body: bytes = b"", encrypt_body_type: int = 0, 
-                           target_entity_type: Type[Entity] = None, **kwargs) -> X19Response | None:
+                           target_entity_type: Type[Entity] = None, add_user_header: bool = True, **kwargs) -> X19Response | None:
         """encrypt_body_type: 0-no encryption, 1-x19encrypted, 2-x19encrypted hexadecimal, 
                             3-g79encrypted, 4-g79encrypted hexadecimal"""
         if string.is_empty(base_url):
@@ -283,7 +290,7 @@ class Client:
             method=method,
             url=base_url + path,
             data=final_body,
-            headers=self._get_request_headers(path, body, header),
+            headers=self._get_request_headers(path, body, header, add_user_header),
             data_verify=lambda r: self._data_verify(r, encrypt_body_type=encrypt_body_type, auto_refresh=kwargs.get("auto_refresh", True)),
         )
         if response is None:
@@ -349,7 +356,7 @@ class Client:
             json.dump(session_data, f, ensure_ascii=False, indent=4)
         self.session_last_modified = os.path.getmtime(self.session_path)
 
-    def _update_serverlist(self):
+    def _update_serverlist(self, save_session: bool = True):
         headers = {}
         if self.server.etag:
             headers["If-None-Match"] = self.server.etag
@@ -372,6 +379,9 @@ class Client:
                 
                 self.server.etag = response.headers.get("ETag", "")
                 self.server.last_modified = response.headers.get("Last-Modified", "")
+                
+                if save_session:
+                    self._save_session()
             else:
                 self.logger.warning(122, f"Failed to fetch serverlist! ({log_extra}, status_code={response.status_code})")
                 
@@ -445,7 +455,5 @@ def get_client(account_name: str, client_name: str, server_env: str, server_code
         
     logger.info(104, f"Request get client (client_context={client_context})")
     client = Client(client_context=client_context, force_relogin=force_relogin)
-    if not client.is_logined():
-        return None
     _clients[cache_key] = client
     return client
