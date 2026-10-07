@@ -8,7 +8,7 @@ from . import BaseEntity
 @dataclass
 class Sauth(BaseEntity):
     access_token: Optional[str] = None
-    aim_info: str = '{"aim":"","country":"CN","tz":"+0800","tzid":""}'
+    aim_info: str = r'{"aim":"127.0.0.1","country":"CN","tz":"+0800","tzid":"Asia\/Hong_Kong","celluar_ip":"","operator":"460000","is_vpn_enabled":false}'
     app_channel: str = "a50_sdk_cn"
     client_login_sn: str = uuid.uuid4().hex.upper()
     deviceid: Optional[str] = None

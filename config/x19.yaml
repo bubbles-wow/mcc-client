@@ -40,6 +40,21 @@ session:
     udid: 
 
 client:
+  android_3.10_dev:
+    type: "pe"
+    config: 
+      engine_version: 3.10.100.299889
+      engine_hash: a42bea991b3b79cf8b884d806dec9f22
+      patch_version: 3.10.100.299889
+      patch_hash: 70c3ccae78613cc54da90e5c36b94e3e
+      pay_channel: ''
+      app_channel: netease
+      sdk_version: 3.4.0
+      step: 659010171
+      step2: 0
+      sign_sp: 2
+      sign_tr: 8
+    sa_data: *sa_data_mumu_android
   android:
     type: "pe"
     config: 
@@ -89,6 +104,7 @@ client:
       patch_hash: 829a1b311bf0ed332a4c9d974c3b218c
       pay_channel: dashen_cloudgame
       app_channel: netease
+      gas_token: ''
       step: -83861389
       step2: 336829955
       sign_sp: 3
@@ -113,7 +129,6 @@ client:
       patch_version: 3.9.36.299191
       patch_hash: 53b3171cc14de99e5f5bc81161c08362
       pay_channel: netease
-      gas_token: ''
       sign_sp: 3
       sign_tr: 6
     sa_data: *sa_data_vm_win
@@ -125,7 +140,6 @@ client:
       patch_version: 3.8.44.296250
       patch_hash: a39e7f98b9c673b52f74e5c24c8aa590
       pay_channel: netease
-      gas_token: ''
       sign_sp: 4
       sign_tr: 7
     sa_data: *sa_data_vm_win
@@ -137,7 +151,6 @@ client:
       patch_version: 3.7.50.292585
       patch_hash: ad57d438f6f6210a79e09015389702dc
       pay_channel: netease
-      gas_token: ''
       sign_sp: 3
       sign_tr: 9
     sa_data: *sa_data_vm_win
