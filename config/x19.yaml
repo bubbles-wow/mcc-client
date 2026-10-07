@@ -60,8 +60,8 @@ client:
     config: 
       engine_version: 3.9.15.297907
       engine_hash: 260a8b0499822c3f4fb4e35e8051afab
-      patch_version: 3.9.33.299190
-      patch_hash: ff7fd5549d6668d9f30400081fd1b076
+      patch_version: 3.9.39.300315
+      patch_hash: fb1d6ab9bb40748a26fc2100f81ac906
       pay_channel: dashen_cloudgame
       app_channel: netease
       step: 0
@@ -74,8 +74,8 @@ client:
     config: 
       engine_version: 3.8.25.293531
       engine_hash: 1e416a87fe5e361d9cc0c3e2388ef0b4
-      patch_version: 3.8.41.296398
-      patch_hash: ef96df71f1c99d7c93d8d388d67771a8
+      patch_version: 3.8.49.297835
+      patch_hash: 62f5c9884b0f9230a6340b8738488a7f
       pay_channel: dashen_cloudgame
       step: 0
       step2: 0
