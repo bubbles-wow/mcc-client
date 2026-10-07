@@ -83,10 +83,12 @@ class Client:
         
     def _init_pe_client_config(self): 
         self.sa_data.app_ver = self.client_config.patch_version
+        self.sauth.gas_token = self.client_config.gas_token
         if self.sa_data.os_name == "android":
             self.sauth.platform = "ad"
             self.sauth.source_platform = "ad"
-            delattr(self.sauth, "gas_token")
+            if self.client_config.gas_token is None:
+                delattr(self.sauth, "gas_token")
         self.sa_data.sdk_ver = self.client_config.sdk_version
         self.sauth.sdk_version = self.client_config.sdk_version
         self.sauth.step = self.client_config.step
@@ -102,8 +104,8 @@ class Client:
                 self.client_config.tdid = ""
                 self.sauth.tdid = ""
             else:
-                self.client_config.tdid = None
-                delattr(self.sauth, "tdid")
+                if self.sauth.tdid is None:
+                    delattr(self.sauth, "tdid")
         if self.client_config.app_channel is None:
             delattr(self.sauth, "source_app_channel")
         else:

@@ -118,6 +118,8 @@ client:
       patch_version: 3.200.104.280674
       patch_hash: f000ab0922db96f0ce87d49ea0a74c83
       pay_channel: dashen_cloudgame
+      step: 0
+      step2: 0
       sign_sp: 1
       sign_tr: 8
     sa_data: *sa_data_mumu_android
