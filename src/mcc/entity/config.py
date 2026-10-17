@@ -38,16 +38,16 @@ class PeClientConfig(BaseEntity):
     engine_hash: str
     patch_version: str
     patch_hash: str
+    sign_sp: int
+    sign_tr: int
     sign_hash: str = "2b3e7ca013bb30a74d822579860c042b"
-    gas_token: str = None
-    step: str = None
-    step2: str = None
-    tdid: str = None
-    sign_sp: int = 3
-    sign_tr: int = 9
-    app_channel: str = None
-    pay_channel: str = "netease"
-    sdk_version: str = "4.16.0"
+    pay_channel: Optional[str] = None
+    app_channel: Optional[str] = None
+    sdk_version: Optional[str] = None
+    gas_token: Optional[str] = None
+    step: Optional[str] = None
+    step2: Optional[str] = None
+    tdid: Optional[str] = None
 
 @dataclass
 class PcClientConfig(BaseEntity):

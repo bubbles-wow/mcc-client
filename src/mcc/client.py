@@ -89,10 +89,22 @@ class Client:
             self.sauth.source_platform = "ad"
             if self.client_config.gas_token is None:
                 delattr(self.sauth, "gas_token")
-        self.sa_data.sdk_ver = self.client_config.sdk_version
-        self.sauth.sdk_version = self.client_config.sdk_version
-        self.sauth.step = self.client_config.step
-        self.sauth.step2 = self.client_config.step2
+        
+        # pay_channel based on platform
+        if self.client_config.pay_channel is None:
+            if self.sauth.platform == "ad":
+                self.client_config.pay_channel = "dashen_cloudgame"
+            elif self.sauth.platform == "pc":
+                self.client_config.pay_channel = "netease"
+            else:
+                self.client_config.pay_channel = ""
+        if self.client_config.sdk_version is not None:
+            self.sa_data.sdk_ver = self.client_config.sdk_version
+            self.sauth.sdk_version = self.client_config.sdk_version
+        if self.client_config.step is not None:
+            self.sauth.step = self.client_config.step
+        if self.client_config.step2 is not None:
+            self.sauth.step2 = self.client_config.step2
         self.sauth.tdid = self.client_config.tdid
         self.sauth.udid = self.sa_data.udid
         
@@ -104,7 +116,7 @@ class Client:
                 self.client_config.tdid = ""
                 self.sauth.tdid = ""
             else:
-                if self.sauth.tdid is None:
+                if self.sauth.tdid is None and self.sauth.platform != "pc":
                     delattr(self.sauth, "tdid")
         if self.client_config.app_channel is None:
             delattr(self.sauth, "source_app_channel")

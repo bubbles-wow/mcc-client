@@ -23,7 +23,7 @@ class Sauth(BaseEntity):
     sessionid: Optional[str] = None
     source_app_channel: str = "a50_sdk_cn"
     source_platform: str = "pc"
-    step: Optional[str] = None
-    step2: Optional[str] = None
+    step: str = "0"
+    step2: str = "0"
     tdid: Optional[str] = None
     udid: Optional[str] = None

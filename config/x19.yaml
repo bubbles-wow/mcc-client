@@ -51,7 +51,6 @@ client:
       app_channel: netease
       sdk_version: 3.4.0
       step: 659010171
-      step2: 0
       sign_sp: 2
       sign_tr: 8
     sa_data: *sa_data_mumu_android
@@ -62,10 +61,7 @@ client:
       engine_hash: c4fbc0625fe2ff8f3aa0b931feb04217
       patch_version: 3.10.0.300878
       patch_hash: 13ba82b0888f771e20e1a00f8c2056ee
-      pay_channel: dashen_cloudgame
       app_channel: netease
-      step: 0
-      step2: 0
       sign_sp: 2
       sign_tr: 8
     sa_data: *sa_data_mumu_android
@@ -76,10 +72,7 @@ client:
       engine_hash: 260a8b0499822c3f4fb4e35e8051afab
       patch_version: 3.9.41.300665
       patch_hash: 2d2833df3518783e52130aa8951c548f
-      pay_channel: dashen_cloudgame
       app_channel: netease
-      step: 0
-      step2: 0
       sign_sp: 3
       sign_tr: 6
     sa_data: *sa_data_mumu_android
@@ -90,9 +83,6 @@ client:
       engine_hash: 1e416a87fe5e361d9cc0c3e2388ef0b4
       patch_version: 3.8.49.297835
       patch_hash: 62f5c9884b0f9230a6340b8738488a7f
-      pay_channel: dashen_cloudgame
-      step: 0
-      step2: 0
       sign_sp: 4
       sign_tr: 7
     sa_data: *sa_data_mumu_android
@@ -103,20 +93,16 @@ client:
       engine_hash: 0fb7b528b222a7a44a10b08e994c786e
       patch_version: 3.7.46.293055
       patch_hash: 681707ba0c015040a5c69768eeccff7c
-      pay_channel: dashen_cloudgame
-      step: 0
-      step2: 0
       sign_sp: 3
       sign_tr: 9
     sa_data: *sa_data_mumu_android
-  android_tech:
+  android_tech_3.9:
     type: "pe"
     config: 
       engine_version: 3.9.500.295033
       engine_hash: c2d6d84719175de02bba264c8acee37d
       patch_version: 3.9.500.295033
       patch_hash: 829a1b311bf0ed332a4c9d974c3b218c
-      pay_channel: dashen_cloudgame
       app_channel: netease
       gas_token: ''
       step: -83861389
@@ -131,9 +117,6 @@ client:
       engine_hash: 883e42b9df0bf93be5f5345fae6bcefa
       patch_version: 3.200.104.280674
       patch_hash: f000ab0922db96f0ce87d49ea0a74c83
-      pay_channel: dashen_cloudgame
-      step: 0
-      step2: 0
       sign_sp: 1
       sign_tr: 8
     sa_data: *sa_data_mumu_android
@@ -144,7 +127,6 @@ client:
       engine_hash: c9720c8ea466541aaf932d35c455e84b
       patch_version: 3.9.36.299191
       patch_hash: 53b3171cc14de99e5f5bc81161c08362
-      pay_channel: netease
       sign_sp: 3
       sign_tr: 6
     sa_data: *sa_data_vm_win
@@ -155,7 +137,6 @@ client:
       engine_hash: e0cd6efb2c8e2260ac1a4f226277538f
       patch_version: 3.8.44.296250
       patch_hash: a39e7f98b9c673b52f74e5c24c8aa590
-      pay_channel: netease
       sign_sp: 4
       sign_tr: 7
     sa_data: *sa_data_vm_win
@@ -166,18 +147,16 @@ client:
       engine_hash: b5ace0e8c9ea1c06157ac7e7387ed93f
       patch_version: 3.7.50.292585
       patch_hash: ad57d438f6f6210a79e09015389702dc
-      pay_channel: netease
       sign_sp: 3
       sign_tr: 9
     sa_data: *sa_data_vm_win
-  pc_cocos_tech:
+  pc_cocos_tech_3.5:
     type: "pe"
     config:
       engine_version: 3.5.100.279203
       engine_hash: pc_cocos
       patch_version: 3.5.100.279203
       patch_hash: d41d8cd98f00b204e9800998ecf8427e
-      pay_channel: netease
       gas_token: ''
       sign_sp: 1
       sign_tr: 8
@@ -185,7 +164,7 @@ client:
   pc_java:
     type: "pc"
     config:
-      version: 1.15.25.5792
+      version: 1.15.30.18895
     sa_data: *sa_data_vm_win
 
 account:
