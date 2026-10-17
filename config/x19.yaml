@@ -110,7 +110,7 @@ client:
       sign_sp: 3
       sign_tr: 6
     sa_data: *sa_data_mumu_android
-  android_tech_3.6:
+  android_tech_3.5:
     type: "pe"
     config: 
       engine_version: 3.200.100.279901
@@ -158,9 +158,13 @@ client:
       patch_version: 3.5.100.279203
       patch_hash: d41d8cd98f00b204e9800998ecf8427e
       gas_token: ''
+      app_channel: netease
+      sdk_version: 4.10.1
       sign_sp: 1
       sign_tr: 8
-    sa_data: *sa_data_vm_win
+    sa_data: 
+      <<: *sa_data_vm_win
+      app_channel: netease
   pc_java:
     type: "pc"
     config:
