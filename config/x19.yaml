@@ -57,10 +57,10 @@ client:
   android:
     type: "pe"
     config: 
-      engine_version: 3.10.0.300878
-      engine_hash: c4fbc0625fe2ff8f3aa0b931feb04217
-      patch_version: 3.10.0.300878
-      patch_hash: 13ba82b0888f771e20e1a00f8c2056ee
+      engine_version: 3.10.5.301327
+      engine_hash: 393dfdf6f78831f80a7e6aa305b21227
+      patch_version: 3.10.13.301880
+      patch_hash: 5c367e3713d1d31c235dddd60e645a8d
       app_channel: netease
       sign_sp: 2
       sign_tr: 8
@@ -70,8 +70,8 @@ client:
     config: 
       engine_version: 3.9.15.297907
       engine_hash: 260a8b0499822c3f4fb4e35e8051afab
-      patch_version: 3.9.41.300665
-      patch_hash: 2d2833df3518783e52130aa8951c548f
+      patch_version: 3.9.44.301624
+      patch_hash: 0e958d951b93c36f86dd7554979f8cb8
       app_channel: netease
       sign_sp: 3
       sign_tr: 6
@@ -121,6 +121,16 @@ client:
       sign_tr: 8
     sa_data: *sa_data_mumu_android
   pc_cocos:
+    type: "pe"
+    config:
+      engine_version: 3.10.7.301588
+      engine_hash: c54d299865908d3d3aacc0707b248032
+      patch_version: 3.10.9.301882
+      patch_hash: 62d78e10550959fbe23eaaccb0f0bf35
+      sign_sp: 2
+      sign_tr: 8
+    sa_data: *sa_data_vm_win
+  pc_cocos_3.9:
     type: "pe"
     config:
       engine_version: 3.9.35.299119
